@@ -50,7 +50,7 @@ public class Vehicle {
 	private fuelType fuel;
 	private String countryOfProd;
 	private int mileage;
-	private int age;
+	private final int age;
 	
 	
 	public Vehicle(String vin, vehicleType type, vehicleSize size, int year, String make, String model, numOfCylinders cylinders, vehicleTrans trans, fuelType fuel, String countryOfProd, int mileage) {

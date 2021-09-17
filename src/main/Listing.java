@@ -3,6 +3,7 @@ package main;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Listing {
 
@@ -19,7 +20,7 @@ public class Listing {
 	 **/
 	public Listing(Vehicle v, float price) {
 		// Get current date and format it as a string
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 		Date d = new Date();
 		
 		this.vehicle = v;
@@ -30,7 +31,7 @@ public class Listing {
 	
 	public Listing(Vehicle v, float price, boolean publishListing) {
 		// Get current date and format it as a string
-		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 		Date d = new Date();
 		
 		this.vehicle = v;
