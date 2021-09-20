@@ -7,7 +7,8 @@ import java.util.Locale;
 
 public class Listing {
 
-	private String id;
+	@SuppressWarnings("unused")
+	private int id;
 	protected Vehicle vehicle;
 	private float price;
 	private String datePosted;
@@ -23,6 +24,7 @@ public class Listing {
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 		Date d = new Date();
 		
+		// Set listing properties
 		this.vehicle = v;
 		this.price = price;
 		this.datePosted = dateFormat.format(d);
@@ -34,6 +36,7 @@ public class Listing {
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 		Date d = new Date();
 		
+		// Set listing properties
 		this.vehicle = v;
 		this.price = price;
 		this.datePosted = dateFormat.format(d);

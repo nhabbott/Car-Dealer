@@ -1,0 +1,23 @@
+<?XML version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 5.3//EN" "http://hibernate.sourceforge.net/hibernate-mapping-5.3.dtd">  
+
+<hibernate-mapping>
+    <class name="main.Vehicle" table="emp1000">
+        <id name="id">
+            <generator class="assigned"></generator>
+        </id>
+
+        <property name="vin"></property>
+        <property name="type"></property>
+        <property name="size"></property>
+        <property name="year"></property>
+        <property name="make"></property>
+        <property name="model"></property>
+        <property name="cylinders"></property>
+        <property name="trans"></property>
+        <property name="fuel"></property>
+        <property name="countryOfProd"></property>
+        <property name="mileage"></property>
+        <property name="age"></property>
+    </class>
+</hibernate-mapping>

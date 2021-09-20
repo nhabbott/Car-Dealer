@@ -39,6 +39,7 @@ public class Vehicle {
 	
 	//TODO Figure out implementation of optional features, color, fuel economy, history, and location
 	
+	private int id;
 	private String vin;
 	private vehicleType type;
 	private vehicleSize size;
@@ -65,7 +66,7 @@ public class Vehicle {
 		this.fuel = fuel;
 		this.countryOfProd = countryOfProd;
 		this.mileage = mileage;
-		this.age = ((Calendar.getInstance().get(Calendar.YEAR)) - (year));
+		this.age = ((Calendar.getInstance().get(Calendar.YEAR)) - (year));	// Subtract current year from year vehicle was manufactured to get the age
 	}
 
 	/** 
