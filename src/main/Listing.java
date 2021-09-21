@@ -5,10 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Listing {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-	@SuppressWarnings("unused")
-	private int id;
+@Entity
+@Table(name = "LISTING_TBL")
+public class Listing {
+	private long id;	
 	protected Vehicle vehicle;
 	private float price;
 	private String datePosted;
@@ -48,6 +55,13 @@ public class Listing {
 	 * Getters & Setters
 	 * 
 	 **/
+	@Id
+	@Column(name = "listing_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public long getId() {
+		return id;
+	}
+	
 	public float getPrice() {
 		return price;
 	}

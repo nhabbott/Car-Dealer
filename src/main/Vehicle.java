@@ -2,6 +2,17 @@ package main;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "VEHICLE_TBL")
 public class Vehicle {
 	enum vehicleType {
 		coupe,
@@ -38,8 +49,7 @@ public class Vehicle {
 	}
 	
 	//TODO Figure out implementation of optional features, color, fuel economy, history, and location
-	
-	private int id;
+	private long id;	
 	private String vin;
 	private vehicleType type;
 	private vehicleSize size;
@@ -51,8 +61,14 @@ public class Vehicle {
 	private fuelType fuel;
 	private String countryOfProd;
 	private int mileage;
-	private final int age;
+	private int age;
 	
+	/** 
+	 * 
+	 * Constructors
+	 * 
+	 **/
+	public Vehicle() {}
 	
 	public Vehicle(String vin, vehicleType type, vehicleSize size, int year, String make, String model, numOfCylinders cylinders, vehicleTrans trans, fuelType fuel, String countryOfProd, int mileage) {
 		this.vin = vin;
@@ -74,6 +90,17 @@ public class Vehicle {
 	 * Getters & Setters
 	 * 
 	 **/
+	@Id
+	@Column(name = "vehicle_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
 	public String getVin() {
 		return vin;
 	}
@@ -82,6 +109,7 @@ public class Vehicle {
 		this.vin = vin;
 	}
 	
+	@Enumerated(EnumType.STRING)
 	public vehicleType getType() {
 		return type;
 	}
@@ -130,6 +158,7 @@ public class Vehicle {
 		this.mileage = mileage;
 	}
 
+	@Enumerated(EnumType.STRING)
 	public vehicleSize getSize() {
 		return size;
 	}
@@ -138,6 +167,7 @@ public class Vehicle {
 		this.size = size;
 	}
 
+	//@Enumerated(EnumType.STRING)
 	public numOfCylinders getCylinders() {
 		return cylinders;
 	}
@@ -146,6 +176,7 @@ public class Vehicle {
 		this.cylinders = cylinders;
 	}
 
+	@Enumerated(EnumType.STRING)
 	public vehicleTrans getTrans() {
 		return trans;
 	}
@@ -154,6 +185,7 @@ public class Vehicle {
 		this.trans = trans;
 	}
 
+	@Enumerated(EnumType.STRING)
 	public fuelType getFuel() {
 		return fuel;
 	}
