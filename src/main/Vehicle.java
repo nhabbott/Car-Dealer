@@ -7,12 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "VEHICLE_TBL")
+@Table(name = "VEHICLE")
 public class Vehicle {
 	enum vehicleType {
 		coupe,
@@ -49,18 +48,49 @@ public class Vehicle {
 	}
 	
 	//TODO Figure out implementation of optional features, color, fuel economy, history, and location
+	@Id @GeneratedValue
+	@Column(name = "id")
 	private long id;	
+	
+	@Column(name = "vin")
 	private String vin;
+	
+	@Column(name = "type")
+	@Enumerated(EnumType.STRING)
 	private vehicleType type;
+	
+	@Column(name = "size")
+	@Enumerated(EnumType.STRING)
 	private vehicleSize size;
+	
+	@Column(name = "year")
 	private int year;
+	
+	@Column(name = "make")
 	private String make;
+	
+	@Column(name = "model")
 	private String model;
+	
+	@Column(name = "cylinders")
+	@Enumerated(EnumType.STRING)
 	private numOfCylinders cylinders;
+	
+	@Column(name = "trans")
+	@Enumerated(EnumType.STRING)
 	private vehicleTrans trans;
+	
+	@Column(name = "fuel")
+	@Enumerated(EnumType.STRING)
 	private fuelType fuel;
+	
+	@Column(name = "countryOfProd")
 	private String countryOfProd;
+	
+	@Column(name = "mileage")
 	private int mileage;
+	
+	@Column(name = "age")
 	private int age;
 	
 	/** 
@@ -91,8 +121,6 @@ public class Vehicle {
 	 * 
 	 **/
 	@Id
-	@Column(name = "vehicle_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public long getId() {
 		return id;
 	}
