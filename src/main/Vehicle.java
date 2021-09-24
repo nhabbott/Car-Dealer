@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "VEHICLE")
 public class Vehicle {
-	enum vehicleType {
+	public enum vehicleType {
 		coupe,
 		crossover,
 		truck,
@@ -22,25 +22,25 @@ public class Vehicle {
 		hatchback
 	}
 	
-	enum vehicleSize {
+	public enum vehicleSize {
 		compact,
 		mid,
 		full
 	}
 	
-	enum vehicleTrans {
+	public enum vehicleTrans {
 		automatic,
 		manual
 	}
 	
-	enum numOfCylinders {
+	public enum numOfCylinders {
 		four,
 		six,
 		eight,
 		twelve
 	}
 	
-	enum fuelType {
+	public enum fuelType {
 		gasoline,
 		diesel,
 		electric,

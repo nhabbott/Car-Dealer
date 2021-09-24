@@ -11,4 +11,4 @@
 
         <mapping class="main.Vehicle"/>
         <mapping class="main.Listing"/>
-    </session-factory>
+        <mapping class="main.User"></mapping></session-factory>

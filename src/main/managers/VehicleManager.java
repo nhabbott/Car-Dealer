@@ -1,4 +1,4 @@
-package main;
+package main.managers;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import main.Vehicle;
 import main.Vehicle.fuelType;
 import main.Vehicle.numOfCylinders;
 import main.Vehicle.vehicleSize;
@@ -17,7 +18,6 @@ import main.Vehicle.vehicleType;
 
 public class VehicleManager {
 	protected SessionFactory sessionFactory;
-	
 
     /**
      * Analyzes classes and creates the appropriate mappings.
@@ -72,8 +72,10 @@ public class VehicleManager {
 	    	id = (long)session.save(v);
 	    	session.getTransaction().commit();
     	} catch (HibernateException e) {
-    		session.getTransaction().rollback();
-    		e.printStackTrace();
+    		if (id == -1) {
+        		session.getTransaction().rollback();
+        		e.printStackTrace();
+    		}
     	} finally {
     		session.close();
     	}
@@ -111,7 +113,7 @@ public class VehicleManager {
     	return vehicles;
     }
  
-    public void update() {
+    public void update(long id) {
         
     }
  
