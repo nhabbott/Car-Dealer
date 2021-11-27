@@ -1,17 +1,23 @@
-package main;
+package objects;
 
 import java.util.Calendar;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "VEHICLE")
+@Table(name="VEHICLE", uniqueConstraints={
+		@UniqueConstraint(columnNames="vin")
+})
 public class Vehicle {
 	public enum vehicleType {
 		coupe,
@@ -48,50 +54,54 @@ public class Vehicle {
 	}
 	
 	//TODO Figure out implementation of optional features, color, fuel economy, history, and location
-	@Id @GeneratedValue
-	@Column(name = "id")
+	@Id
+	@Column(name="vid", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;	
 	
-	@Column(name = "vin")
+	@Column(name="vin", unique=true, nullable=false)
 	private String vin;
 	
-	@Column(name = "type")
+	@Column(name="type", unique=false, nullable=false)
 	@Enumerated(EnumType.STRING)
 	private vehicleType type;
 	
-	@Column(name = "size")
+	@Column(name="size", unique=false, nullable=false)
 	@Enumerated(EnumType.STRING)
 	private vehicleSize size;
 	
-	@Column(name = "year")
+	@Column(name="year", unique=false, nullable=false)
 	private int year;
 	
-	@Column(name = "make")
+	@Column(name="make", unique=false, nullable=false)
 	private String make;
 	
-	@Column(name = "model")
+	@Column(name="model", unique=false, nullable=false)
 	private String model;
 	
-	@Column(name = "cylinders")
+	@Column(name="cylinders", unique=false, nullable=false)
 	@Enumerated(EnumType.STRING)
 	private numOfCylinders cylinders;
 	
-	@Column(name = "trans")
+	@Column(name="trans", unique=false, nullable=false)
 	@Enumerated(EnumType.STRING)
 	private vehicleTrans trans;
 	
-	@Column(name = "fuel")
+	@Column(name="fuel", unique=false, nullable=false)
 	@Enumerated(EnumType.STRING)
 	private fuelType fuel;
 	
-	@Column(name = "countryOfProd")
+	@Column(name="countryOfProd", unique=false, nullable=false)
 	private String countryOfProd;
 	
-	@Column(name = "mileage")
+	@Column(name="mileage", unique=false, nullable=false)
 	private int mileage;
 	
-	@Column(name = "age")
+	@Column(name="age", unique=false, nullable=false)
 	private int age;
+	
+	@OneToOne(mappedBy="vehicle", cascade=CascadeType.ALL)
+	private Listing listing;
 	
 	/** 
 	 * 
@@ -224,5 +234,9 @@ public class Vehicle {
 	
 	public int getAge() {
 		return age;
+	}
+	
+	public void setAge(int age) {
+		this.age = age;
 	}
 }

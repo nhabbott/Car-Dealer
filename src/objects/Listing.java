@@ -1,35 +1,55 @@
-package main;
+package objects;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "LISTING")
+@Table(name="LISTING", uniqueConstraints={
+		@UniqueConstraint(columnNames="listingId")
+})
 public class Listing {
 	
-	@Id @GeneratedValue
-	@Column(name = "id")
+	@Id
+	@Column(name="listingId", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;	
 	
-	@Column(name = "vehicleId")
-	private long vehicleId;
+	@Column(name="userId", unique=false, nullable=false)
+	private long userId;
 	
-	@Column(name = "price")
+	@OneToOne(cascade=CascadeType.ALL)
+	@PrimaryKeyJoinColumn
+	private Vehicle vehicle;
+	
+	@ManyToOne
+	@JoinColumn(name="wishlistId")
+	private Wishlist wishlist;
+	
+	@Column(name="price", unique=false, nullable=false)
 	private float price;
 	
-	@Column(name = "datePosted")
+	@Column(name="datePosted", unique=false, nullable=false)
 	private String datePosted;
 	
-	@Column(name = "publishListing")
+	@Column(name="publishListing", unique=false, nullable=false)
 	private boolean publishListing;
+	
+	public Listing() {}
 	
 	/**
 	 * Creates new listing object. Defaults the listing to not be published
@@ -37,14 +57,15 @@ public class Listing {
 	 * @param v Vehicle Object
 	 * @param price The desired price of the listing
 	 */
-	public Listing(Vehicle v, float price) {
+	public Listing(Vehicle v, float price, long userId) {
 		// Get current date and format it as a string
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 		Date d = new Date();
 		
 		// Set listing properties
-		this.vehicleId = v.getId();
+		this.vehicle = v;
 		this.price = price;
+		this.userId = userId;
 		this.datePosted = dateFormat.format(d);
 		this.publishListing = false;
 	}
@@ -56,14 +77,15 @@ public class Listing {
 	 * @param price The desired price of the listing
 	 * @param publishListing Should the listing be shown to customers
 	 */
-	public Listing(Vehicle v, float price, boolean publishListing) {
+	public Listing(Vehicle v, float price, long userId, boolean publishListing) {
 		// Get current date and format it as a string
 		DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
 		Date d = new Date();
 		
 		// Set listing properties
-		this.vehicleId = v.getId();
+		this.vehicle = v;
 		this.price = price;
+		this.userId = userId;
 		this.datePosted = dateFormat.format(d);
 		this.publishListing = publishListing;
 	}
@@ -74,9 +96,26 @@ public class Listing {
 	 * 
 	 * @return id - The id given to the object by MySQL
 	 */
-	@Id
 	public long getId() {
 		return id;
+	}
+	
+	/**
+	 * Gets the id of the user who created the listing
+	 * 
+	 * @return id - The user id
+	 */
+	public long getUserId() {
+		return userId;
+	}
+	
+	/**
+	 * Gets vehicle of the listing
+	 * 
+	 * @return Vehicle - The vehicle of the listing
+	 */
+	public Vehicle getVehicle() {
+		return vehicle;
 	}
 	
 	/**

@@ -1,47 +1,56 @@
-package main;
+package objects;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import main.Authentication;
 
 @Entity
-@Table(name = "USER")
+@Table(name="USER", uniqueConstraints={
+		@UniqueConstraint(columnNames="userId"),
+		@UniqueConstraint(columnNames="email")
+})
 public class User {
-	
-	@Id @GeneratedValue
-	@Column(name = "id")
+	@Id
+	@Column(name="userId", unique=true, nullable=false)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 	
-	@Column(name = "firstName")
+	@Column(name="firstName", unique=false, nullable=false)
 	private String firstName;
 	
-	@Column(name = "lastName")
+	@Column(name="lastName", unique=false, nullable=false)
 	private String lastName;
 	
-	@Column(name = "isAdmin")
+	@Column(name="isAdmin", unique=false, nullable=false)
 	private boolean isAdmin;
 	
-	@Column(name = "userName")
+	@Column(name="userName", unique=false, nullable=false)
 	private String userName;
 	
-	@Column(name = "password")
+	@Column(name="password", unique=false, nullable=false)
 	private String password;
 	
-	@Column(name = "salt")
+	@Column(name="salt", unique=false, nullable=false)
 	private String salt;
 	
-	@Column(name = "email")
+	@Column(name="email", unique=true, nullable=false)
 	private String email;
 	
-	@Column(name = "wishlist")
-	private List<Long> wishlist;
+	@OneToOne(cascade=CascadeType.ALL)
+	@PrimaryKeyJoinColumn
+	private Wishlist wishlist;
 	
 	public User() {}
 
@@ -63,10 +72,10 @@ public class User {
 		this.password = finalHash;
 		this.salt = Authentication.convertToString(bSalt);
 		this.email = email;
-		this.wishlist = new ArrayList<Long>();
+		this.wishlist = new Wishlist();
 	}
 	
-	public User(String firstName, String lastName, boolean isAdmin, String userName, String password, String email, List<Long> wishlist) {
+	public User(String firstName, String lastName, boolean isAdmin, String userName, String password, String email, Wishlist wishlist) {
 		String finalHash = null;
 		byte[] bSalt = null;
 		
@@ -126,12 +135,12 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public List<Long> getWishlist() {
+	
+	public Wishlist getWishlist() {
 		return wishlist;
 	}
 
-	public void setWishlist(List<Long> wishlist) {
+	public void setWishlist(Wishlist wishlist) {
 		this.wishlist = wishlist;
 	}
 

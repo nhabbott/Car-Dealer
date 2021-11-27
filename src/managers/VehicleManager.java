@@ -1,4 +1,4 @@
-package main.managers;
+package managers;
 
 import java.util.List;
 
@@ -9,12 +9,13 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
-import main.Vehicle;
-import main.Vehicle.fuelType;
-import main.Vehicle.numOfCylinders;
-import main.Vehicle.vehicleSize;
-import main.Vehicle.vehicleTrans;
-import main.Vehicle.vehicleType;
+import exceptions.DatabaseErrorException;
+import objects.Vehicle;
+import objects.Vehicle.fuelType;
+import objects.Vehicle.numOfCylinders;
+import objects.Vehicle.vehicleSize;
+import objects.Vehicle.vehicleTrans;
+import objects.Vehicle.vehicleType;
 
 public class VehicleManager {
 	protected SessionFactory sessionFactory;
@@ -57,8 +58,9 @@ public class VehicleManager {
      * @param countryOfProd Where was the vehicle made
      * @param mileage How many miles
      * @return id - The id given to the object by MySQL
+     * @throws DatabaseErrorException 
      */
-    public long create(String vin, vehicleType type, vehicleSize size, int year, String make, String model, numOfCylinders cylinders, vehicleTrans trans, fuelType fuel, String countryOfProd, int mileage) {
+    public long create(String vin, vehicleType type, vehicleSize size, int year, String make, String model, numOfCylinders cylinders, vehicleTrans trans, fuelType fuel, String countryOfProd, int mileage) throws DatabaseErrorException {
     	// Open session and create var to return
     	Session session = sessionFactory.openSession();
     	long id = -1;
@@ -74,7 +76,7 @@ public class VehicleManager {
     	} catch (HibernateException e) {
     		if (id == -1) {
         		session.getTransaction().rollback();
-        		e.printStackTrace();
+        		throw new DatabaseErrorException("There was an error creating a new vehicle", e);
     		}
     	} finally {
     		session.close();
@@ -83,17 +85,33 @@ public class VehicleManager {
     	return id;
     }
  
-    public void get() {
-       
+    public Vehicle get(long id) throws DatabaseErrorException {
+    	// Open session
+    	Session session  = sessionFactory.openSession();
+    	Vehicle v = null;
+    	
+    	// Delete item from DB
+    	try {
+    		v = (Vehicle) session.get(Vehicle.class, id);
+    		
+    	} catch (HibernateException e) {
+    		throw new DatabaseErrorException("There was an error retreiving a vehicle with an id: " + id, e);
+    	} finally {
+    		session.close();
+    	}
+    	
+    	// Return the user
+    	return v;
     }
     
 	/**
 	 * Retrieves all vehicle entries from the DB
 	 * 
 	 * @return List - A list of all vehicles stored in the DB
+	 * @throws DatabaseErrorException 
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Vehicle> getAll() {
+	public List<Vehicle> getAll() throws DatabaseErrorException {
 		// Open session and create new list
     	Session session = sessionFactory.openSession();
     	List<Vehicle> vehicles = null;
@@ -105,7 +123,7 @@ public class VehicleManager {
     		session.getTransaction().commit();
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();
-    		e.printStackTrace();
+    		throw new DatabaseErrorException("There was an error retreiving all vehicles", e);
     	} finally {
     		session.close();
     	}
@@ -121,8 +139,10 @@ public class VehicleManager {
      * Deletes a vehicle from the DB by id
      * 
      * @param id The id given to the object by MySQL
+     * @return Boolean
+     * @throws DatabaseErrorException 
      */
-    public void delete(long id) {
+    public boolean delete(long id) throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
     	
@@ -133,9 +153,10 @@ public class VehicleManager {
     		session.beginTransaction();
     		session.delete(v);
     		session.getTransaction().commit();
+    		return true;
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();
-    		e.printStackTrace();
+    		throw new DatabaseErrorException("There was an error deleting a vehicle with an id: " + id, e);
     	} finally {
     		session.close();
     	}

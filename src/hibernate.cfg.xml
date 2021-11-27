@@ -1,14 +1,15 @@
-<?XML version='1.0' encoding='UTF-8'?>  
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 5.3//EN" "http://hibernate.sourceforge.net/hibernate-configuration-5.3.dtd">  
-
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.url">jdbc:mysql://</property>  
-        <property name="connection.username">root</property>  
-        <property name="connection.password">PasswordGoesHere</property>  
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <!-- <property name="show_sql">true</property> -->
+    	<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    	<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/cars</property>  
+        <property name="connection.username">cars</property>  
+        <property name="connection.password">Cars1234!</property>  
+        <property name="show_sql">true</property>
 
-        <mapping class="main.Vehicle"/>
-        <mapping class="main.Listing"/>
-        <mapping class="main.User"></mapping></session-factory>
+        <mapping class="objects.Vehicle"/>
+        <mapping class="objects.Listing"/>
+        <mapping class="objects.User"/>
+        <mapping class="objects.Wishlist"/>
+    </session-factory>
+</hibernate-configuration>
