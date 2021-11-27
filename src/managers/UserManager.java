@@ -12,7 +12,6 @@ import objects.User;
 
 public class UserManager {
 	protected SessionFactory sessionFactory;
-	
 
     /**
      * Analyzes classes and creates the appropriate mappings.

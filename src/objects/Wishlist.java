@@ -30,4 +30,20 @@ public class Wishlist {
 	private User user;
 	
 	public Wishlist() {}
+
+	public Wishlist(List<Listing> list) {
+		this.list = list;
+	}
+	
+	public List<Listing> getList() {
+		return list;
+	}
+
+	public void setList(List<Listing> list) {
+		this.list = list;
+	}
+
+	public long getId() {
+		return id;
+	}
 }

@@ -14,6 +14,7 @@ import managers.UserManager;
 class UserManagerTest {
 
 	UserManager um;
+	static UnitTestHelpers db;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -25,7 +26,7 @@ class UserManagerTest {
 		}
 	}
 
-	/*@AfterEach
+	@AfterEach
 	void tearDown() throws Exception {
 		try {
 			um.exit();
@@ -33,14 +34,17 @@ class UserManagerTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	@AfterAll
-	void tearDownAfterClass() throws Exception {
+	static void tearDownAfterClass() throws Exception {
 		try {
-			
+			db = new UnitTestHelpers();
+			db.setup();
+			db.cleanUpUserTests();
+			db.exit();
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 		}
 	}
 
@@ -102,7 +106,7 @@ class UserManagerTest {
 	}
 
 	@Test
-	@DisplayName("User can be reteived from the database")
+	@DisplayName("User information can be updated in the database")
 	void testUpdate() {
 		fail("Not yet implemented");
 	}
