@@ -85,12 +85,18 @@ public class VehicleManager {
     	return id;
     }
  
+	/**
+	 * Retrieves a vehicle entries from the DB
+	 * 
+	 * @return Vehicle - The desired vehicle object
+	 * @throws DatabaseErrorException 
+	 */
     public Vehicle get(long id) throws DatabaseErrorException {
     	// Open session
     	Session session  = sessionFactory.openSession();
     	Vehicle v = null;
     	
-    	// Delete item from DB
+    	// Get item from DB
     	try {
     		v = (Vehicle) session.get(Vehicle.class, id);
     		
@@ -100,7 +106,7 @@ public class VehicleManager {
     		session.close();
     	}
     	
-    	// Return the user
+    	// Return the vehicle
     	return v;
     }
     
