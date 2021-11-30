@@ -13,10 +13,10 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 
-import cache.Caching;
+import static cache.Caching.cache;
 import exceptions.DatabaseErrorException;
 
-public class RegisterController implements Caching {
+public class RegisterController {
 
     @FXML
     private TextField usernameTextField;
@@ -32,7 +32,9 @@ public class RegisterController implements Caching {
     private Label registerMessageLabel;
 
      public void submitButtonOnAction(ActionEvent event) throws IOException {
-        if (!usernameTextField.getText().isBlank() && !passwordTextField.getText().isBlank() && !firstnameTextField.getText().isBlank() && !lastnameTextField.getText().isBlank() && !emailTextField.getText().isBlank()) {
+        if (usernameTextField.getText().isBlank() || passwordTextField.getText().isBlank() || firstnameTextField.getText().isBlank() || lastnameTextField.getText().isBlank() || emailTextField.getText().isBlank()) {
+        	registerMessageLabel.setText("Please fill in all of the boxes.");
+        } else {
         	// Init user manager
         	UserManager um = new UserManager();
         	um.setup();
@@ -64,8 +66,6 @@ public class RegisterController implements Caching {
 			} catch (DatabaseErrorException e) {
 				registerMessageLabel.setText("There was an error, please try again.");
 			}
-        } else {
-            registerMessageLabel.setText("Please fill in all of the boxes.");
         }
     }
 

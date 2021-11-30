@@ -75,15 +75,15 @@ public class SellController {
     }
 
     public void sellButtonOnAction(ActionEvent event) {
-        if (!vinTextField.getText().isBlank() && !yearTextField.getText().isBlank() &&
-                !mileageTextField.getText().isBlank() && !priceTextField.getText().isBlank() &&
-                !typeChoiceBox.getSelectionModel().isEmpty() && !transmissionChoiceBox.getSelectionModel().isEmpty()
-                && !sizeChoiceBox.getSelectionModel().isEmpty() && !cylinderChoiceBox.getSelectionModel().isEmpty() &&
-                !fuelChoiceBox.getSelectionModel().isEmpty() && !makeComboBox.getSelectionModel().isEmpty() &&
-                !modelComboBox.getSelectionModel().isEmpty() && !copComboBox.getSelectionModel().isEmpty()) {
-            //I'll assume saving the above fields into the datebase goes here
+        if (vinTextField.getText().isBlank() || yearTextField.getText().isBlank() ||
+                mileageTextField.getText().isBlank() || priceTextField.getText().isBlank() ||
+                typeChoiceBox.getSelectionModel().isEmpty() || transmissionChoiceBox.getSelectionModel().isEmpty()
+                || sizeChoiceBox.getSelectionModel().isEmpty() || cylinderChoiceBox.getSelectionModel().isEmpty() ||
+                fuelChoiceBox.getSelectionModel().isEmpty() || makeComboBox.getSelectionModel().isEmpty() ||
+                modelComboBox.getSelectionModel().isEmpty() || copComboBox.getSelectionModel().isEmpty()) {
+        	sellMessageLabel.setText("Please provide information for all fields.");
         } else {
-            sellMessageLabel.setText("Please provide information for all fields.");
+        	//I'll assume saving the above fields into the datebase goes here
         }
     }
 

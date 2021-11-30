@@ -22,11 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
-import cache.Caching;
+import static cache.Caching.cache;
 
 import java.net.URL;
 
-public class LoginController implements Initializable, Caching {
+public class LoginController implements Initializable {
 
     @FXML
     private Button cancelButton;
@@ -48,10 +48,10 @@ public class LoginController implements Initializable, Caching {
 
 
     public void loginButtonOnAction(ActionEvent event) throws IOException {
-        if (!usernameTextField.getText().isBlank() && !enterPasswordField.getText().isBlank()) {
-            validateLogin(event, usernameTextField.getText(), enterPasswordField.getText());
+        if (usernameTextField.getText().isBlank() || enterPasswordField.getText().isBlank()) {
+        	loginMessageLabel.setText("Please enter username and password");
         } else {
-            loginMessageLabel.setText("Please enter username and password");
+        	validateLogin(event, usernameTextField.getText(), enterPasswordField.getText());
         }
     }
 

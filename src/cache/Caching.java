@@ -1,5 +1,5 @@
 package cache;
 
-public interface Caching {
+public class Caching {
 	public static final MemoryCache cache = new MemoryCache();
 }
