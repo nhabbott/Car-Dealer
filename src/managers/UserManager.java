@@ -1,14 +1,11 @@
 package managers;
 
-import java.util.List;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.query.Query;
 
 import exceptions.DatabaseErrorException;
 import objects.User;
@@ -40,17 +37,6 @@ public class UserManager {
         sessionFactory.close();
     }
     
-    /**
-     * Creates new user and saves to database
-     * @param firstName
-     * @param lastName
-     * @param isAdmin
-     * @param userName
-     * @param password
-     * @param email
-     * @return
-     * @throws DatabaseErrorException
-     */
     public long create(String firstName, String lastName, boolean isAdmin, String userName, String password, String email) throws DatabaseErrorException {
     	// Open session and create var to return
     	Session session = sessionFactory.openSession();
@@ -73,45 +59,6 @@ public class UserManager {
     	}
     	
     	return id;
-    }
-    
-    @SuppressWarnings("unchecked")
-	public User getByUsername(String username) throws DatabaseErrorException {
-    	// Open session
-    	Session session = sessionFactory.openSession();
-    	Query q;
-    	User u;
-    	List<User> res;
-    	
-    	// Get user from DB
-    	try {
-    		session.beginTransaction();
-    		
-    		q = session.createSQLQuery("SELECT * FROM users WHERE userName=:param1");
-			q.setParameter("param1", username);
-    		res = q.list();
-			
-    		// Check if correct user
-    		if ((res.size() == 1) && (res.get(0).getUserName() == username)) {
-    			u = res.get(0);
-    		} else {
-    			for (User us: res) {
-    				if (us.getUserName() == username) {
-    					u = us;
-    				}
-    			}
-    		}
-    		
-			session.getTransaction().commit();
-    	} catch (HibernateException e) {
-    		session.getTransaction().rollback();
-    		throw new DatabaseErrorException("There was an error retreiving a user with an username: " + username, e);
-    	} finally {
-    		session.close();
-    	}
-    	
-    	// Return the user
-    	return u;
     }
     
     public User get(long id) throws DatabaseErrorException {

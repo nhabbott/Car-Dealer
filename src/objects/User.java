@@ -160,7 +160,5 @@ public class User {
 		this.email = email;
 	}
 	
-	public String getSalt() {
-		return salt;
-	}
+	
 }
