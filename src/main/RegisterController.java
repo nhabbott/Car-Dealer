@@ -44,16 +44,7 @@ public class RegisterController {
 				long newUserId = um.create(firstnameTextField.getText(), lastnameTextField.getText(), false, usernameTextField.getText(), passwordTextField.getText(), emailTextField.getText());
 				
 				// Cache new user
-				if (cache.contains("user")) {
-					// Remove old user from cache
-					cache.remove("user");
-					
-					// Cache new user
-					cache.add("user", um.get(newUserId));
-				} else {
-					// Cache new user
-					cache.add("user", um.get(newUserId));
-				}
+				cache.add("user", um.get(newUserId));
 				
 				// Create next view
 		    	Parent viewPageParent = FXMLLoader.load(getClass().getResource("sell.fxml"));

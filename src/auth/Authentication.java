@@ -1,4 +1,4 @@
-package main;
+package auth;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;

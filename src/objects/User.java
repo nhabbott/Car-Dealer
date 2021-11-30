@@ -14,7 +14,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import main.Authentication;
+import auth.Authentication;
 
 @Entity
 @Table(name="USER", uniqueConstraints={

@@ -7,4 +7,10 @@ Then put all JAR files (found in the /lib directory of the ZIP file) in the Hibe
 Then, download the MySQL JDBC connector JAR from https://dev.mysql.com/downloads/connector/j/
 You must select "Platform Independent" for the Operating System. Then place the JAR in C:\JARs
 
+After that, download the JAR from http://www.java2s.com/Code/JarDownload/com.google/com.google.guava_1.6.0.jar.zip
+Then place the JAR in C:\JARs
+
+Next, download the Javax Mailer JAR from https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_2/javax.mail.jar
+Then place the JAR in C:\JARs
+
 After doing this, you should be able to compile like normal.

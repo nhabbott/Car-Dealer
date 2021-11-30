@@ -39,5 +39,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
 	<classpathentry kind="lib" path="C:/JARs/com.google.guava_1.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/JARs/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

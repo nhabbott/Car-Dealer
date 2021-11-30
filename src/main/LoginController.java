@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
+import auth.Authentication;
+
 import static cache.Caching.cache;
 
 import java.net.URL;
@@ -92,7 +94,7 @@ public class LoginController implements Initializable {
 		         appStage.show();
 				
 				// Cache user
-				cache.add("user", u, 0);
+				cache.add("user", u);
 			} else {
 				loginMessageLabel.setText("Incorrect username or password");
 			}

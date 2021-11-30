@@ -65,6 +65,10 @@ public class MemoryCache implements Cache {
 			return;
 		}
 		
+		if (cache.contains(key)) {
+			return;
+		}
+		
 		if (value == null) {
 			cache.remove(key);
 		} else {
