@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ListingController">
+   <top>
+      <AnchorPane prefHeight="79.0" prefWidth="800.0" style="-fx-background-color: #8900f7;" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="14.0" layoutY="14.0" text="Welcome," textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label fx:id="username" layoutX="14.0" layoutY="34.0" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="220.0" layoutY="12.0" text="Used Vehicles For Sale" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="36.0" />
+               </font>
+            </Label>
+            <VBox alignment="TOP_RIGHT" layoutX="695.0" layoutY="1.0" prefHeight="63.0" prefWidth="100.0" spacing="5.0">
+               <children>
+                  <Button fx:id="sellVehicleButton" mnemonicParsing="false" onAction="#goToSellVehicle" style="-fx-background-color: #ac8acd;" text="Sell Vehicle" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="logoutButton" mnemonicParsing="false" onAction="#logOut" style="-fx-background-color: #ac8acd;" text="Log Out" textFill="WHITE">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </top>
+   <center>
+      <TableView fx:id="table" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: grey;" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="VINColumn" editable="false" prefWidth="75.0" text="VIN" />
+          <TableColumn fx:id="makeColumn" editable="false" prefWidth="75.0" text="Make" />
+            <TableColumn fx:id="modelColumn" editable="false" prefWidth="75.0" text="Model" />
+            <TableColumn fx:id="yearColumn" editable="false" prefWidth="75.0" text="Year" />
+            <TableColumn fx:id="mileageColumn" editable="false" prefWidth="75.0" text="Mileage" />
+            <TableColumn fx:id="priceColumn" editable="false" prefWidth="75.0" text="Price" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </center>
+   <bottom>
+      <Button fx:id="purchaseButton" mnemonicParsing="false" onAction="#goToPurchase" prefHeight="55.0" prefWidth="823.0" style="-fx-background-color: #8900f7;" text="Purchase" textFill="WHITE" BorderPane.alignment="CENTER">
+         <font>
+            <Font name="System Bold" size="26.0" />
+         </font>
+      </Button>
+   </bottom>
+</BorderPane>
