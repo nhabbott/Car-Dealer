@@ -2,7 +2,31 @@ In order to make vehicles and listings persistent, we need a third-party library
 To make the project compile, you need to create the following folder located at C:\JARs\Hibernate. 
 
 Next, download the Hibernate JAR files from https://sourceforge.net/projects/hibernate/files/hibernate-orm/5.5.7.Final/hibernate-release-5.5.7.Final.zip/download
-Then put all JAR files (found in the /lib directory of the ZIP file) in the Hibernate folder that was just created.
+Then put the following JAR files (found in the /lib directory of the ZIP file) in the Hibernate folder that was just created.
+antlr-2.7.7.jar
+byte-buddy-1.11.12.jar
+c3p0-0.9.5.5.jar
+classmate-1.5.1.jar
+dom4j-2.1.3.jar
+FastInfoset-1.2.15.jar
+geolatte-geom-1.8.0.jar
+hibernate-c3p0-5.5.7.Final.jar
+hibernate-commons-annotations-5.1.2.Final.jar
+hibernate-core-5.5.7.Final.jar
+hibernate-envers-5.5.7.Final.jar
+hibernate-jpamodelgen-5.5.7.Final.jar
+hibernate-osgi-5.5.7.Final.jar
+istack-commons-runtime-3.0.7.jar
+jandex-2.2.3.Final.jar
+javassist-3.27.0-GA.jar
+javax.activation-api-1.2.0.jar
+javax.persistence-api-2.2.jar
+jaxb-api-2.3.1.jar
+jaxb-runtime-2.3.1.jar
+jboss-logging-3.4.2.Final.jar
+jboss-transaction-api_1.2_spec-1.1.1.Final.jar
+stax-ex-1.8.jar
+txw2-2.3.1.jar
 
 Then, download the MySQL JDBC connector JAR from https://dev.mysql.com/downloads/connector/j/
 You must select "Platform Independent" for the Operating System. Then place the JAR in C:\JARs

@@ -38,11 +38,6 @@ protected SessionFactory sessionFactory;
         sessionFactory.close();
     }
     
-    /**
-     * Cleans up DB from Unit UserManager Unit Tests
-     * 
-     * @throws DatabaseErrorException 
-     */
     public void cleanUpUserTests() throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
@@ -68,53 +63,4 @@ protected SessionFactory sessionFactory;
     	}
     }
     
-    public void cleanUpVehicleTests() throws DatabaseErrorException {
-    	// Open session
-    	Session session = sessionFactory.openSession();
-    	
-    	// Queries to run
-    	String[] queries = {"DELETE FROM vehicle", "ALTER TABLE vehicle AUTO_INCREMENT = 1"};
-    	
-    	try {
-    		session.beginTransaction();
-    		
-    		for (String s: queries) {
-    			Query q = session.createSQLQuery(s);
-    			q.executeUpdate();
-    			q = null;
-    		}
-    		
-    		session.getTransaction().commit();
-    	} catch (HibernateException e) {
-    		session.getTransaction().rollback();
-    		throw new DatabaseErrorException("There was en error running a query", e);
-    	} finally {
-    		session.close();
-    	}
-    }
-    
-    public void cleanUpListingTests() throws DatabaseErrorException {
-    	// Open session
-    	Session session = sessionFactory.openSession();
-    	
-    	// Queries to run
-    	String[] queries = {};
-    	
-    	try {
-    		session.beginTransaction();
-    		
-    		for (String s: queries) {
-    			Query q = session.createSQLQuery(s);
-    			q.executeUpdate();
-    			q = null;
-    		}
-    		
-    		session.getTransaction().commit();
-    	} catch (HibernateException e) {
-    		session.getTransaction().rollback();
-    		throw new DatabaseErrorException("", e);
-    	} finally {
-    		session.close();
-    	}
-    }
 }

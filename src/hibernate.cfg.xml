@@ -2,9 +2,9 @@
     <session-factory>
     	<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
     	<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://db4free.net:3306/carsprojectdb</property>  
-        <property name="connection.username">carsdb</property>  
-        <property name="connection.password">)fixrIkkkYIsHBWeuN8</property>  
+        <property name="connection.url">jdbc:mysql://localhost:3306/cars</property>  
+        <property name="connection.username">cars</property>  
+        <property name="connection.password">Cars1234!</property>  
         <property name="show_sql">true</property>
 
         <mapping class="objects.Vehicle"/>
