@@ -48,7 +48,7 @@ class ListingManagerTest {
 		}
 	}
 
-	@Test
+	/*@Test
 	@DisplayName("Listing can be created and not published")
 	void testCreate1() {
 		// Create id object for comparison
@@ -75,7 +75,7 @@ class ListingManagerTest {
 		} catch (DatabaseErrorException e) {
 			fail(": " + e);
 		}
-	}
+	}*/
 
 	@Test
 	@DisplayName("All listings can be retreived from the database")

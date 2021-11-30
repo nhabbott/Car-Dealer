@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 import auth.Authentication;
 
 @Entity
-@Table(name="USER", uniqueConstraints={
+@Table(name="user", uniqueConstraints={
 		@UniqueConstraint(columnNames="userId"),
 		@UniqueConstraint(columnNames="email")
 })

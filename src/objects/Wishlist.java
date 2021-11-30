@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="WISHLIST", uniqueConstraints={
+@Table(name="wishlist", uniqueConstraints={
 		@UniqueConstraint(columnNames="wishlistId")
 })
 public class Wishlist {

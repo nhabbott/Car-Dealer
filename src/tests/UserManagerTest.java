@@ -81,6 +81,7 @@ class UserManagerTest {
 			// Attempt to retrieve user
 			assertEquals(id, um.get(id).getId(), "User id's do not match");
 		} catch (DatabaseErrorException e) {
+			e.printStackTrace();
 			fail("An error occurred when adding a new user: " + e);
 		}
 	}

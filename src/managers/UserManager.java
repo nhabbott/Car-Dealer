@@ -100,37 +100,23 @@ public class UserManager {
     	Session session = sessionFactory.openSession();
     	Query q;
     	User u = null;
-    	List<User> res;
     	
     	// Get user from DB
     	try {
     		session.beginTransaction();
     		
-    		q = session.createSQLQuery("SELECT * FROM users WHERE userName=:param1");
+    		q = session.createQuery("FROM User WHERE userName=:param1");
 			q.setParameter("param1", username);
-    		res = q.list();
-			
-    		// Check if correct user
-    		if ((res.size() == 1) && (res.get(0).getUserName() == username)) {
-    			u = res.get(0);
-    		} else {
-    			for (User us: res) {
-    				if (us.getUserName() == username) {
-    					u = us;
-    				}
-    			}
-    		}
+    		u = (User) q.uniqueResult();
     		
 			session.getTransaction().commit();
+			return u;
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();
     		throw new DatabaseErrorException("There was an error retreiving a user with an username: " + username, e);
     	} finally {
     		session.close();
     	}
-    	
-    	// Return the user
-    	return u;
     }
     
     /**
@@ -151,7 +137,7 @@ public class UserManager {
     	try {
     		session.beginTransaction();
     		
-    		q = session.createSQLQuery("SELECT * FROM users WHERE email=:param1");
+    		q = session.createSQLQuery("FROM User WHERE email=:param1");
 			q.setParameter("param1", email);
     		res = q.getResultList();
 			
@@ -200,7 +186,7 @@ public class UserManager {
     	try {
     		dbSession.beginTransaction();
     		
-    		q = dbSession.createSQLQuery("INSERT INTO users (resetToken) VALUES (:param1) WHERE email=:param2");
+    		q = dbSession.createSQLQuery("INSERT INTO User (resetToken) VALUES (:param1) WHERE email=:param2");
 			q.setParameter("param1", resetToken);
 			q.setParameter("param2", em);
 			q.executeUpdate();
@@ -288,14 +274,14 @@ public class UserManager {
     		session.beginTransaction();
     		
     		// Set new password
-    		update = session.createSQLQuery("UPDATE users SET (password, salt) VALUES (:param1, :param2) WHERE resetToken=:param3");
+    		update = session.createSQLQuery("UPDATE User SET (password, salt) VALUES (:param1, :param2) WHERE resetToken=:param3");
     		update.setParameter("param1", Authentication.convertToString(bSalt));
     		update.setParameter("param2", finalHash);
     		update.setParameter("param3", resetToken);
     		update.executeUpdate();
     		
     		// Remove resetToken
-    		remove = session.createSQLQuery("UPDATE users SET (resetToken) VALUES (:param1) WHERE resetToken=:param2");
+    		remove = session.createSQLQuery("UPDATE User SET (resetToken) VALUES (:param1) WHERE resetToken=:param2");
     		remove.setParameter("param1", "");
     		remove.setParameter("param2", resetToken);
     		remove.executeUpdate();

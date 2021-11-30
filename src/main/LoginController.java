@@ -76,11 +76,6 @@ public class LoginController implements Initializable {
     	UserManager um = new UserManager();
     	um.setup();
     	
-    	// Create next view
-    	Parent viewPageParent = FXMLLoader.load(getClass().getResource("sell.fxml"));
-        Scene viewPageScene = new Scene(viewPageParent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-    	
     	// Find user in DB with matching username
     	try {
 			User u = um.getByUsername(user);
@@ -89,16 +84,23 @@ public class LoginController implements Initializable {
 			boolean authed = Authentication.authenticate(pass, Authentication.toByteArray(u.getSalt()), Authentication.toByteArray(u.getPassword()));
 			
 			if (authed) {
-				// Go to home
-		         appStage.setScene(viewPageScene);
-		         appStage.show();
 				
 				// Cache user
 				cache.add("user", u);
+				
+		    	// Create next view
+		    	Parent viewPageParent = FXMLLoader.load(getClass().getResource("sell.fxml"));
+		        Scene viewPageScene = new Scene(viewPageParent);
+		        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+				
+				// Go to home
+		         appStage.setScene(viewPageScene);
+		         appStage.show();
 			} else {
 				loginMessageLabel.setText("Incorrect username or password");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			loginMessageLabel.setText("Incorrect username or password");
 		} finally {
 			um.exit();

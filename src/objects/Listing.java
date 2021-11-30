@@ -19,7 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="LISTING", uniqueConstraints={
+@Table(name="listing", uniqueConstraints={
 		@UniqueConstraint(columnNames="listingId")
 })
 public class Listing {
