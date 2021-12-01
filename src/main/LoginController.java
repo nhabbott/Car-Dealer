@@ -5,6 +5,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -41,12 +42,17 @@ public class LoginController implements Initializable {
     private TextField usernameTextField;
     @FXML
     private PasswordField enterPasswordField;
+    @FXML
+    private ProgressIndicator loginSpinner;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         File logoFile = new File("Images/Login.png" );
         Image logoImage = new Image(logoFile.toURI().toString());
         logoImageView.setImage(logoImage);
+        
+        // Loading bar off
+        loginSpinner.setVisible(false);
         
         // Init UserManager
         um.setup();
@@ -61,6 +67,7 @@ public class LoginController implements Initializable {
         if (usernameTextField.getText().isBlank() || enterPasswordField.getText().isBlank()) {
         	loginMessageLabel.setText("Please enter username and password");
         } else {
+        	loginSpinner.setVisible(true);
         	validateLogin(usernameTextField.getText(), enterPasswordField.getText());
         }
     }

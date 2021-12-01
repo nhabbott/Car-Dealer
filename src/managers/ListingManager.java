@@ -217,23 +217,39 @@ public class ListingManager {
 	 * @throws DatabaseErrorException
 	 */
 	@SuppressWarnings("rawtypes")
-	public void setPublished(long id) throws DatabaseErrorException {
+	public void setPublished(long id, boolean toDo) throws DatabaseErrorException {
 		// Open session
 		Session session = sessionFactory.openSession();
 		Query q;
 		
-		// Talk to DB
-		try {
-			session.beginTransaction();
-			q = session.createSQLQuery("UPDATE listing SET publishListing=1 WHERE listingId=:param1");
-			q.setParameter("param1", id);
-			q.executeUpdate();
-			session.getTransaction().commit();
-		} catch (HibernateException e) {
-			session.getTransaction().rollback();
-			throw new DatabaseErrorException("There was an error publishing the listing", e);
-		} finally {
-			session.close();
+		if (toDo) {
+			// Talk to DB
+			try {
+				session.beginTransaction();
+				q = session.createSQLQuery("UPDATE listing SET publishListing=1 WHERE listingId=:param1");
+				q.setParameter("param1", id);
+				q.executeUpdate();
+				session.getTransaction().commit();
+			} catch (HibernateException e) {
+				session.getTransaction().rollback();
+				throw new DatabaseErrorException("There was an error publishing the listing", e);
+			} finally {
+				session.close();
+			}
+		} else {
+			// Talk to DB
+			try {
+				session.beginTransaction();
+				q = session.createSQLQuery("UPDATE listing SET publishListing=0 WHERE listingId=:param1");
+				q.setParameter("param1", id);
+				q.executeUpdate();
+				session.getTransaction().commit();
+			} catch (HibernateException e) {
+				session.getTransaction().rollback();
+				throw new DatabaseErrorException("There was an error publishing the listing", e);
+			} finally {
+				session.close();
+			}
 		}
 	}
 	

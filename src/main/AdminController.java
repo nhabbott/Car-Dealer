@@ -31,13 +31,13 @@ public class AdminController implements Initializable {
 	private Main m = new Main();
 	
 	// For DB
-	private ListingManager lm = new ListingManager();
+	protected ListingManager lm = new ListingManager();
 	
     @FXML
     private TableView<Request> requestTableView;
 
     @FXML
-    private TableView<?> sellsTableView;
+    private TableView<PreviousSale> sellsTableView;
 
     @FXML
     private TableColumn<Request, Button> acceptTableColumnR;
@@ -135,6 +135,14 @@ public class AdminController implements Initializable {
     	
     	// Setup sold table
     	initColumnsS();
+    	if (!cache.contains("sold")) {
+    		loadDataS();
+    	}
+    	
+    	sellsTableView.setItems(soldData);
+    	
+    	// Close ListingManager
+    	lm.exit();
     }
 
     /**
@@ -252,8 +260,6 @@ public class AdminController implements Initializable {
 			cache.add("requests", listings, TimeUnit.MINUTES.toMillis(30));
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			lm.exit();
 		}
 		
 		if (listings != null) {
@@ -285,15 +291,13 @@ public class AdminController implements Initializable {
  			cache.add("sold", listings, TimeUnit.MINUTES.toMillis(30));
  		} catch (Exception e) {
  			e.printStackTrace();
- 		} finally {
- 			lm.exit();
  		}
  		
  		if (listings != null) {
 	 		listings.forEach((p) -> {
 	 			// Add sale
-	 			PreviousSale r = new PreviousSale(p);
-	 			soldData.add(r);
+	 			PreviousSale s = new PreviousSale(p);
+	 			soldData.add(s);
 	 		});
  		}
      }
@@ -315,7 +319,7 @@ public class AdminController implements Initializable {
 			
 			// Publish listing
 			try {
-				lm.setPublished(listingId);
+				lm.setPublished(listingId, true);
 			} catch (DatabaseErrorException e1) {
 				e1.printStackTrace();
 			} finally {
@@ -352,8 +356,46 @@ public class AdminController implements Initializable {
 	 * @see RequestButton
 	 */
 	EventHandler<ActionEvent> declineButtonHandler = new EventHandler<ActionEvent>() {
+		@SuppressWarnings("unchecked")
 		@Override
 		public void handle(ActionEvent e) {
+			// Init ListingManager
+			lm.setup();
+			
+			// Get needed info
+			RequestButton b = (RequestButton) e.getSource();
+			long listingId = (long) b.getRequest().getId();
+			
+			// Un-publish listing
+			try {
+				lm.setPublished(listingId, false);
+			} catch (DatabaseErrorException e1) {
+				e1.printStackTrace();
+			} finally {
+				lm.exit();
+			}
+			
+			// Fix the cache
+			if (cache.contains("requests")) {
+				List<Listing> l = (List<Listing>) cache.get("requests");
+				l.forEach(p -> {
+					if (p.getId() == listingId) {
+						l.remove(p);
+					}
+				});
+				
+				cache.remove("requests");
+				cache.add("requests", l, TimeUnit.MINUTES.toMillis(30));
+			}
+			
+			// Remove from table
+			//sellsTableView.
+			
+			// Update requests table
+			//loadDataR();
+			//requestTableView.setItems(requestData);
+			
+			// End event
 			e.consume();
 		}
 	};

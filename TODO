@@ -1,12 +1,18 @@
 Backend  
  - Finish JUnit Tests
-   
-Frontend
- - Admin View
- 	- Make admin screen should show searchable list of users
- 	- Finish decline button logic
- 	- Figure out column editing
-    - Refresh button for admin requests view
+ - Move DB operations to tasks
  - Purchase View
  - Sell View
  - Password Reset
+ - Generate reports for current listings
+ 
+
+Frontend
+ - Admin View
+ 	- Make admin screen should show searchable list of users
+ 	- Figure out column editing
+    - Refresh button for admin requests view
+    - Switch to regular user view button (and one to switch back to admin view)
+ - Listing View
+   - Add filtering functionality
+   - Let users view their current listings
