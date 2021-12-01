@@ -54,14 +54,29 @@ public class ListingController implements Initializable {
 		
 	private ObservableList<ListingInfo> data = FXCollections.observableArrayList();
 	
+	/**
+	 * Scene changer
+	 * @param e
+	 * @throws IOException
+	 */
 	public void goToSellVehicle(ActionEvent e) throws IOException {
 		m.changeScene("sell.fxml");
 	}
 	
+	/**
+	 * Scene changer
+	 * @param e
+	 * @throws IOException
+	 */
 	public void goToPurchase(ActionEvent e) throws IOException {
 		m.changeScene("purchase.fxml");
 	}
 	
+	/**
+	 * Logout button handler
+	 * @param e
+	 * @throws IOException
+	 */
 	public void logOut(ActionEvent e) throws IOException {
 		cache.clear();
 		m.changeScene("login.fxml");
@@ -83,7 +98,10 @@ public class ListingController implements Initializable {
 	}
 
 	
-	// Obtain listings from database as a list
+	/**
+	 * Get info from DB for the tables
+	 * @return List<Listing>
+	 */
 	private List<Listing> retrieveData() {
 		// Return var
 		List<Listing> listings = null;
@@ -99,7 +117,10 @@ public class ListingController implements Initializable {
 		return listings;
 	}
 	
-	// Create table info from listings
+	/**
+	 * Create table info from listings
+	 * @param listings - List of listings
+	 */
 	private void populate(final List<Listing> listings) {
 		listings.forEach(p -> data.add(new ListingInfo(p)));
 	}

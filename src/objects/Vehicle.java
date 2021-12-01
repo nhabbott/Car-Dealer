@@ -103,13 +103,25 @@ public class Vehicle {
 	@OneToOne(mappedBy="vehicle", cascade=CascadeType.ALL)
 	private Listing listing;
 	
-	/** 
-	 * 
-	 * Constructors
-	 * 
-	 **/
+	/**
+	 * Class constructor
+	 */
 	public Vehicle() {}
 	
+	/**
+	 * Class constructor specifying Vehicle details
+	 * @param vin
+	 * @param type
+	 * @param size
+	 * @param year
+	 * @param make
+	 * @param model
+	 * @param cylinders
+	 * @param trans
+	 * @param fuel
+	 * @param countryOfProd
+	 * @param mileage
+	 */
 	public Vehicle(String vin, vehicleType type, vehicleSize size, int year, String make, String model, numOfCylinders cylinders, vehicleTrans trans, fuelType fuel, String countryOfProd, int mileage) {
 		this.vin = vin;
 		this.type = type;
@@ -125,117 +137,216 @@ public class Vehicle {
 		this.age = ((Calendar.getInstance().get(Calendar.YEAR)) - (year));	// Subtract current year from year vehicle was manufactured to get the age
 	}
 
-	/** 
-	 * 
-	 * Getters & Setters
-	 * 
-	 **/
+	/**
+	 * Gets the id of the vehicle
+	 * @return long
+	 */
 	@Id
 	public long getId() {
 		return id;
 	}
 	
+	/**
+	 * Sets the id of the vehicle
+	 * @param id
+	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 	
+	/**
+	 * Gets the VIN of the vehicle
+	 * @return String
+	 */
 	public String getVin() {
 		return vin;
 	}
 	
+	/**
+	 * Sets the VIN of the listing
+	 * @param vin
+	 */
 	public void setVin(String vin) {
 		this.vin = vin;
 	}
 	
+	/**
+	 * Gets the type of the vehicle
+	 * @return enum - vehicleType
+	 */
 	@Enumerated(EnumType.STRING)
 	public vehicleType getType() {
 		return type;
 	}
 	
+	/**
+	 * Sets the type of the vehicle
+	 * @param enum - vehicleType
+	 */
 	public void setType(vehicleType type) {
 		this.type = type;
 	}
 	
+	/**
+	 * Gets the make of the vehicle
+	 * @return String
+	 */
 	public String getMake() {
 		return make;
 	}
 	
+	/**
+	 * Sets the make of the vehicle
+	 * @param make
+	 */
 	public void setMake(String make) {
 		this.make = make;
 	}
 	
+	/**
+	 * Gets the model of the vehicle
+	 * @return String
+	 */
 	public String getModel() {
 		return model;
 	}
 	
+	/**
+	 * Sets the model of the vehicle
+	 * @param model
+	 */
 	public void setModel(String model) {
 		this.model = model;
 	}
 	
+	/**
+	 * Gets the country of production of the vehicle
+	 * @return String
+	 */
 	public String getCountryOfProd() {
 		return countryOfProd;
 	}
 	
+	/**
+	 * Sets the country of production of the vehicle
+	 * @param countryOfProd
+	 */
 	public void setCountryOfProd(String countryOfProd) {
 		this.countryOfProd = countryOfProd;
 	}
 	
+	/**
+	 * Gets the year of the vehicle
+	 * @return int
+	 */
 	public int getYear() {
 		return year;
 	}
 	
+	/**
+	 * Sets the year of the vehicle
+	 * @param year
+	 */
 	public void setYear(int year) {
 		this.year = year;
 	}
 	
+	/**
+	 * Gets the mileage of the vehicle
+	 * @return int
+	 */
 	public int getMileage() {
 		return mileage;
 	}
 	
+	/**
+	 * Sets the mileage of the vehicle
+	 * @param mileage
+	 */
 	public void setMileage(int mileage) {
 		this.mileage = mileage;
 	}
 
+	/**
+	 * Gets the size of the vehicle
+	 * @return enum - vehicleSize
+	 */
 	@Enumerated(EnumType.STRING)
 	public vehicleSize getSize() {
 		return size;
 	}
 
+	/**
+	 * Sets the size of the vehicle
+	 * @param size
+	 */
 	public void setSize(vehicleSize size) {
 		this.size = size;
 	}
-
+	
+	/**
+	 * Gets the number of cylinders of the vehicle
+	 * @return enum - numOfCylinders
+	 */
 	//@Enumerated(EnumType.STRING)
 	public numOfCylinders getCylinders() {
 		return cylinders;
 	}
 
+	/**
+	 * Sets the number of cylinders of the vehicle
+	 * @param cylinders
+	 */
 	public void setCylinders(numOfCylinders cylinders) {
 		this.cylinders = cylinders;
 	}
 
+	/**
+	 * Gets the transmission type of the vehicle
+	 * @return enum - vehicleTrans
+	 */
 	@Enumerated(EnumType.STRING)
 	public vehicleTrans getTrans() {
 		return trans;
 	}
 
+	/**
+	 * Sets the transmission type of the vehicle
+	 * @param trans
+	 */
 	public void setTrans(vehicleTrans trans) {
 		this.trans = trans;
 	}
 
+	/**
+	 * Gets the fuel type of the vehicle
+	 * @return enum - fuelType
+	 */
 	@Enumerated(EnumType.STRING)
 	public fuelType getFuel() {
 		return fuel;
 	}
 
+	/**
+	 * Sets the fuel type of the vehicle
+	 * @param fuel
+	 */
 	public void setFuel(fuelType fuel) {
 		this.fuel = fuel;
 	}
 	
+	/**
+	 * Gets the age of the vehicle
+	 * @return int
+	 */
 	public int getAge() {
 		return age;
 	}
 	
+	/**
+	 * Sets the age of the vehicle
+	 * @param age
+	 */
 	public void setAge(int age) {
 		this.age = age;
 	}

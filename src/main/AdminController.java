@@ -102,6 +102,9 @@ public class AdminController implements Initializable {
     private ObservableList<Request> requestData = FXCollections.observableArrayList();
     private ObservableList<PreviousSale> soldData = FXCollections.observableArrayList();
 
+    /**
+     * 
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Get user
@@ -117,6 +120,9 @@ public class AdminController implements Initializable {
     	initTable();
     }
 
+    /**
+     * Initializes the table with information from the database
+     */
     private void initTable() {
     	
     	// Setup request table
@@ -131,6 +137,9 @@ public class AdminController implements Initializable {
     	initColumnsS();
     }
 
+    /**
+     * Initializes the requests column headers
+     */
     private void initColumnsR() {
         //name, vin, make, model, year, mileage, price;
         nameTableColumnR.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -146,6 +155,9 @@ public class AdminController implements Initializable {
         //editableCols();
     }
 
+    /**
+     * Initializes the sells column headers
+     */
     private void initColumnsS() {
         //name, vin, make, model, year, mileage, price;
         nameTableColumnS.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -208,14 +220,27 @@ public class AdminController implements Initializable {
     }*/
 
 
+    /**
+     * Action for makeAdminButton
+     * @param event - ActionEvent from button
+     */
     public void makeAdminButtonOnAction(ActionEvent event) {
         //make the username an admin
     }
 
+    /**
+     * Event Handler for exitButton
+     * @param event - ActionEvent
+     * @throws IOException
+     */
     public void exitButtonOnAction(ActionEvent event) throws IOException {
 		m.changeScene("login.fxml");
     }
 
+    /**
+     * Retrieves all requests from the database
+     * @see ListingManager
+     */
     private void loadDataR() {
 		List<Listing> listings = null;
 		
@@ -245,6 +270,10 @@ public class AdminController implements Initializable {
 		}
     }
 
+    /**
+     * Retrieves all sells from the database
+     * @see ListingManager
+     */
      private void loadDataS() {
  		List<Listing> listings = null;
 		
@@ -269,7 +298,10 @@ public class AdminController implements Initializable {
  		}
      }
     
-	// Buttons
+	/**
+	 * EventHandler for the Listing accept buttons
+	 * @see RequestButton
+	 */
 	EventHandler<ActionEvent> acceptButtonHandler = new EventHandler<ActionEvent>() {
 		@SuppressWarnings("unchecked")
 		@Override
@@ -315,6 +347,10 @@ public class AdminController implements Initializable {
 		}
 	};
 	
+	/**
+	 * EventHandler for the Listing decline buttons
+	 * @see RequestButton
+	 */
 	EventHandler<ActionEvent> declineButtonHandler = new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent e) {

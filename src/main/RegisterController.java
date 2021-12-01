@@ -41,6 +41,11 @@ public class RegisterController implements Initializable {
 		um.setup();
 	}
     
+	/**
+	 * EventHandler for submitButton
+	 * @param event
+	 * @throws IOException
+	 */
      public void submitButtonOnAction(ActionEvent event) throws IOException {
     	 if (usernameTextField.getText().isBlank() || passwordTextField.getText().isBlank() || firstnameTextField.getText().isBlank() || lastnameTextField.getText().isBlank() || emailTextField.getText().isBlank()) {
          	registerMessageLabel.setText("Please fill in all of the boxes.");
@@ -62,6 +67,11 @@ public class RegisterController implements Initializable {
          }
     }
 
+ 	/**
+ 	 * EventHandler for backButton
+ 	 * @param event
+ 	 * @throws IOException
+ 	 */
     public void backButtonOnAction(ActionEvent event) throws IOException {
 		m.changeScene("login.fxml");
     }

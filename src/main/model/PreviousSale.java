@@ -21,6 +21,10 @@ public class PreviousSale {
 	private final SimpleIntegerProperty mileage;
 	private final SimpleFloatProperty price;
 	
+	/**
+	 * Class constructor specifying the listing
+	 * @param l - The listing to get info from
+	 */
 	public PreviousSale(Listing l) {
 		// Get user info
 		User u = null;
@@ -45,27 +49,66 @@ public class PreviousSale {
 		this.price = new SimpleFloatProperty(l.getPrice());
 	}
 	
+	/**
+	 * Gets the id of the listing
+	 * @return long
+	 */
 	public long getId() {
 		return this.id;
 	}
+	
+	/**
+	 * Gets the username of the user who created the listing
+	 * @return String
+	 */
 	public String getName() {
 		return name.get();
 	}
+	
+	/**
+	 * Gets the VIN of the listing
+	 * @return String
+	 */
 	public String getVin() {
 		return vin.get();
 	}
+	
+	/**
+	 * Gets the make of the listing
+	 * @return String
+	 */
 	public String getMake() {
 		return make.get();
 	}
+	
+	/**
+	 * Gets the model of the listing
+	 * @return String
+	 */
 	public String getModel() {
 		return model.get();
 	}
+	
+	/**
+	 * Gets the year of the listing
+	 * @return int
+	 */
 	public int getYear() {
 		return year.get();
 	}
+	
+	/**
+	 * Gets the mileage of the listing
+	 * @return int
+	 */
 	public int getMileage() {
 		return mileage.get();
 	}
+	
+	/**
+	 * Gets the price of the listing
+	 * @return float
+	 */
 	public float getPrice() {
 		return price.get();
 	}

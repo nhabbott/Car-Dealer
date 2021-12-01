@@ -345,8 +345,4 @@ public class UserManager {
     		session.close();
     	}
     }
-    
-    public void update(long id) {
-        
-    }
 }

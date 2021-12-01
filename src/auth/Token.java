@@ -7,6 +7,10 @@ public class Token {
 	private static final int LENGTH = 6;
 	private final static Random rand = new Random();
 	
+	/**
+	 * Generates a randomized string
+	 * @return String
+	 */
 	public static String generateResetToken() {
 		String toReturn = "";
 		int i = LENGTH;

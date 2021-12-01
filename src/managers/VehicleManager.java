@@ -85,6 +85,13 @@ public class VehicleManager {
     	return id;
     }
  
+    /**
+     * Gets the object from the DB by id
+     * @param id
+     * @return Vehicle
+     * @throws DatabaseErrorException
+     * @see Vehicle
+     */
     public Vehicle get(long id) throws DatabaseErrorException {
     	// Open session
     	Session session  = sessionFactory.openSession();
@@ -107,7 +114,7 @@ public class VehicleManager {
 	/**
 	 * Retrieves all vehicle entries from the DB
 	 * 
-	 * @return List - A list of all vehicles stored in the DB
+	 * @return List<Vehicle> - A list of all vehicles stored in the DB
 	 * @throws DatabaseErrorException 
 	 */
 	@SuppressWarnings("unchecked")

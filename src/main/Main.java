@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
 
-
 public class Main extends Application {
 	
 	private static Stage stg;
@@ -24,6 +23,11 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 	
+	/**
+	 * Changes to the given scene
+	 * @param fxml - FXML file for the scene
+	 * @throws IOException
+	 */
 	public void changeScene(String fxml) throws IOException {
 		Parent pane = FXMLLoader.load(getClass().getResource(fxml));
 		stg.getScene().setRoot(pane);

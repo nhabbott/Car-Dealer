@@ -42,7 +42,6 @@ public class ListingManager {
     
     /**
      * Creates a new vehicle entry in the DB
-     * 
      * @param Vehicle - Vehicle object to store
      * @param Price  - Price of the vehicle
      * @param userId - DB id of the user that owns the listing
@@ -160,6 +159,11 @@ public class ListingManager {
     	return listings;
     }
     
+    /**
+     * Gets all requests from the DB
+     * @return List<Listing>
+     * @throws DatabaseErrorException
+     */
 	@SuppressWarnings("unchecked")
 	public List<Listing> getAllRequests() throws DatabaseErrorException {
     	// Open session and create return var
@@ -181,6 +185,11 @@ public class ListingManager {
     	return listings;
     }
 	
+	/**
+	 * Gets all sold listings from the DB
+	 * @return List<Listing>
+	 * @throws DatabaseErrorException
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Listing> getAllSold() throws DatabaseErrorException {
     	// Open session and create return var
@@ -202,6 +211,11 @@ public class ListingManager {
     	return listings;
     }
 	
+	/**
+	 * Sets the listing to be published
+	 * @param id - Id of the listing to edit
+	 * @throws DatabaseErrorException
+	 */
 	@SuppressWarnings("rawtypes")
 	public void setPublished(long id) throws DatabaseErrorException {
 		// Open session
@@ -223,6 +237,11 @@ public class ListingManager {
 		}
 	}
 	
+	/**
+	 * Sets the listing to be sold
+	 * @param id - Id of the listing to edit
+	 * @throws DatabaseErrorException
+	 */
 	@SuppressWarnings("rawtypes")
 	public void setSold(long id) throws DatabaseErrorException {
 		// Open session

@@ -29,20 +29,39 @@ public class Wishlist {
 	@OneToOne(mappedBy="wishlist", cascade=CascadeType.ALL)
 	private User user;
 	
+	/**
+	 * Class constructor
+	 */
 	public Wishlist() {}
 
+	/**
+	 * Class constructor specifying the list of listings
+	 * @param List<Listing>
+	 */
 	public Wishlist(List<Listing> list) {
 		this.list = list;
 	}
 	
+	/**
+	 * Gets the list of listings
+	 * @return List<Listing>
+	 */
 	public List<Listing> getList() {
 		return list;
 	}
 
+	/**
+	 * Sets the list of listings
+	 * @param List<Listing>
+	 */
 	public void setList(List<Listing> list) {
 		this.list = list;
 	}
 
+	/**
+	 * Gets the id of the wishlist
+	 * @return long
+	 */
 	public long getId() {
 		return id;
 	}

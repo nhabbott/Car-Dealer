@@ -52,7 +52,11 @@ public class LoginController implements Initializable {
         um.setup();
     }
 
-
+    /**
+     * EventHandler for loginButton
+     * @param event
+     * @throws IOException
+     */
     public void loginButtonOnAction(ActionEvent event) throws IOException {
         if (usernameTextField.getText().isBlank() || enterPasswordField.getText().isBlank()) {
         	loginMessageLabel.setText("Please enter username and password");
@@ -61,19 +65,40 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * EventHandler for cancelButton
+     * @param event
+     * @throws IOException
+     */
     public void cancelButtonOnAction(ActionEvent event) {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * EventHandler for registerButton
+     * @param event
+     * @throws IOException
+     */
     public void registerButtonOnAction(ActionEvent event) throws IOException {
 		m.changeScene("register.fxml");
     }
     
+    /**
+     * EventHandler for forgotPasswordButton
+     * @param event
+     * @throws IOException
+     */
     public void forgotPasswordButtonOnAction(ActionEvent event) throws IOException {
     	//
     }
 
+    /**
+     * Validates user credentials
+     * @param user - Username
+     * @param pass - Password
+     * @throws IOException
+     */
     public void validateLogin(String user, String pass) {
     	// Find user in DB with matching username
     	try {

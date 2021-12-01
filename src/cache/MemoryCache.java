@@ -12,7 +12,7 @@ public class MemoryCache implements Cache {
 	private final DelayQueue<DelayedCacheObject> cleanUpQueue = new DelayQueue<>();
 	
 	/**
-	 * Create new cache
+	 * Class constructor
 	 */
 	public MemoryCache() {
 		Thread cleaningThread = new Thread(() -> {
@@ -79,7 +79,6 @@ public class MemoryCache implements Cache {
 
 	/**
 	 * Remove cached object
-	 * 
 	 * @param Key - Name used to retrieve cached object
 	 */
 	@Override
@@ -98,7 +97,6 @@ public class MemoryCache implements Cache {
 
 	/**
 	 * Get cached object
-	 * 
 	 * @param Key - Name used to retrieve cached object
 	 */
 	@Override
@@ -116,7 +114,6 @@ public class MemoryCache implements Cache {
 
 	/**
 	 * Get overall size of the cache
-	 * 
 	 * @return Size - The current size of the cache
 	 */
 	@Override
