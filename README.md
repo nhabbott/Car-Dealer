@@ -1,5 +1,4 @@
 # Compilation Instructions
-
 In order to make vehicles and listings persistent, we need a third-party library. This library has already been added to .classpath file of this eclipse project. 
 To make the project compile, you need to create the following folder located at C:\JARs\Hibernate. 
 
