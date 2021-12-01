@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -20,8 +19,14 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Label layoutX="606.0" layoutY="24.0" text="User:" textFill="WHITE" />
-            <Label fx:id="nameLabel" layoutX="641.0" layoutY="24.0" prefHeight="17.0" prefWidth="146.0" text="nameLabel" textFill="WHITE" />
+            <Label layoutX="670.0" layoutY="5.0" text="User:" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font></Label>
+            <Label fx:id="nameLabel" layoutX="670.0" layoutY="32.0" prefHeight="17.0" prefWidth="146.0" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font></Label>
          </children>
       </AnchorPane>
    </top>
@@ -97,18 +102,18 @@
    <center>
       <AnchorPane prefHeight="335.0" prefWidth="342.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="455.0" prefWidth="260.0" spacing="5.0">
+            <VBox prefHeight="455.0" prefWidth="260.0" spacing="4.5">
                <children>
                   <TextField fx:id="vinTextField" promptText="VIN#" />
                   <ChoiceBox fx:id="typeChoiceBox" prefWidth="150.0" />
                   <ChoiceBox fx:id="sizeChoiceBox" prefWidth="150.0" />
                   <TextField fx:id="yearTextField" promptText="DD/MM/YYYY" />
-                  <ComboBox fx:id="makeComboBox" prefWidth="150.0" />
-                  <ComboBox fx:id="modelComboBox" prefWidth="150.0" />
+                  <TextField fx:id="makeTextField" promptText="Make" />
+                  <TextField fx:id="modelTextField" promptText="Model" />
                   <ChoiceBox fx:id="cylinderChoiceBox" prefWidth="150.0" />
                   <ChoiceBox fx:id="transmissionChoiceBox" prefWidth="150.0" />
                   <ChoiceBox fx:id="fuelChoiceBox" prefWidth="150.0" />
-                  <ComboBox fx:id="copComboBox" prefWidth="150.0" />
+                  <TextField fx:id="copTextField" promptText="Country" />
                   <TextField fx:id="mileageTextField" promptText="Mileage" />
                   <TextField fx:id="priceTextField" promptText="\$0.00" />
                </children>
@@ -116,12 +121,12 @@
                   <Insets top="80.0" />
                </padding>
             </VBox>
-            <Button fx:id="sellButton" layoutX="65.0" layoutY="487.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #8900f7;" text="Sell" textFill="WHITE">
+            <Button fx:id="sellButton" layoutX="65.0" layoutY="487.0" mnemonicParsing="false" onAction="#sellButtonOnAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #8900f7;" text="Sell" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="cancelButton" layoutX="215.0" layoutY="487.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #8900f7;" text="Cancel" textFill="WHITE">
+            <Button fx:id="cancelButton" layoutX="215.0" layoutY="487.0" mnemonicParsing="false" onAction="#cancelButtonOnAction" prefHeight="25.0" prefWidth="91.0" style="-fx-background-color: #8900f7;" text="Cancel" textFill="WHITE">
                <font>
                   <Font size="14.0" />
                </font>

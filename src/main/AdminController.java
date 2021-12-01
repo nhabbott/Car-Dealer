@@ -12,8 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 
-
-
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -87,7 +86,7 @@ public class AdminController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-    	initTable();
+        initTable();
     }
 
     private void initTable() {
@@ -175,9 +174,9 @@ public class AdminController implements Initializable {
         //make the username an admin
     }
 
-    public void exitButtonOnAction(ActionEvent event) {
-        Stage stage = (Stage) exitButton.getScene().getWindow();
-        stage.close();
+    public void exitButtonOnAction(ActionEvent event) throws IOException {
+    	Main m = new Main();
+		m.changeScene("login.fxml");
     }
 
     private void loadDataR() {

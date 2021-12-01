@@ -1,11 +1,7 @@
 package main;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -17,6 +13,7 @@ import managers.UserManager;
 import objects.User;
 import javafx.event.ActionEvent;
 
+import static cache.Caching.cache;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,12 +21,16 @@ import java.util.ResourceBundle;
 
 import auth.Authentication;
 
-import static cache.Caching.cache;
-
 import java.net.URL;
 
 public class LoginController implements Initializable {
 
+	// For scene changes
+	protected Main m = new Main();
+	
+	// For login
+	protected UserManager um = new UserManager();
+	
     @FXML
     private Button cancelButton;
     @FXML
@@ -46,6 +47,9 @@ public class LoginController implements Initializable {
         File logoFile = new File("Images/Login.png" );
         Image logoImage = new Image(logoFile.toURI().toString());
         logoImageView.setImage(logoImage);
+        
+        // Init UserManager
+        um.setup();
     }
 
 
@@ -53,7 +57,7 @@ public class LoginController implements Initializable {
         if (usernameTextField.getText().isBlank() || enterPasswordField.getText().isBlank()) {
         	loginMessageLabel.setText("Please enter username and password");
         } else {
-        	validateLogin(event, usernameTextField.getText(), enterPasswordField.getText());
+        	validateLogin(usernameTextField.getText(), enterPasswordField.getText());
         }
     }
 
@@ -63,19 +67,14 @@ public class LoginController implements Initializable {
     }
 
     public void registerButtonOnAction(ActionEvent event) throws IOException {
-        Parent registerPageParent = FXMLLoader.load(getClass().getResource("register.fxml"));
-        Scene registerPageScene = new Scene(registerPageParent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(registerPageScene);
-        appStage.show();
-
+		m.changeScene("register.fxml");
+    }
+    
+    public void forgotPasswordButtonOnAction(ActionEvent event) throws IOException {
+    	//
     }
 
-    public void validateLogin(ActionEvent event, String user, String pass) throws IOException {
-    	// Init user manager
-    	UserManager um = new UserManager();
-    	um.setup();
-    	
+    public void validateLogin(String user, String pass) {
     	// Find user in DB with matching username
     	try {
 			User u = um.getByUsername(user);
@@ -84,18 +83,15 @@ public class LoginController implements Initializable {
 			boolean authed = Authentication.authenticate(pass, Authentication.toByteArray(u.getSalt()), Authentication.toByteArray(u.getPassword()));
 			
 			if (authed) {
-				
 				// Cache user
 				cache.add("user", u);
 				
-		    	// Create next view
-		    	Parent viewPageParent = FXMLLoader.load(getClass().getResource("sell.fxml"));
-		        Scene viewPageScene = new Scene(viewPageParent);
-		        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-				
-				// Go to home
-		         appStage.setScene(viewPageScene);
-		         appStage.show();
+				// Change scene
+		    	if (u.isAdmin()) {
+		    		m.changeScene("admin.fxml");
+		    	} else {
+		    		m.changeScene("listing.fxml");
+		    	}
 			} else {
 				loginMessageLabel.setText("Incorrect username or password");
 			}

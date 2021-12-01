@@ -2,17 +2,11 @@ package main;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import objects.User;
 
 import static cache.Caching.cache;
@@ -21,82 +15,88 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SellController implements Initializable {
+public class SellController implements Initializable{
 
-    @FXML
-    private Button cancelButton;
+		protected Main m = new Main();
+	
+        @FXML
+        private Button cancelButton;
 
-    @FXML
-    private ComboBox<?> copComboBox;
+        @FXML
+        private TextField copTextField;
 
-    @FXML
-    private ChoiceBox<?> cylinderChoiceBox;
+        @FXML
+        private ChoiceBox<String> cylinderChoiceBox;
 
-    @FXML
-    private ChoiceBox<?> fuelChoiceBox;
+        @FXML
+        private ChoiceBox<String> fuelChoiceBox;
 
-    @FXML
-    private ComboBox<?> makeComboBox;
+        @FXML
+        private TextField makeTextField;
 
-    @FXML
-    private TextField mileageTextField;
+        @FXML
+        private TextField mileageTextField;
 
-    @FXML
-    private ComboBox<?> modelComboBox;
+        @FXML
+        private TextField modelTextField;
 
-    @FXML
-    private Label nameLabel; //not sure how to make this the current users name
+        @FXML
+        private Label nameLabel;
 
-    @FXML
-    private TextField priceTextField;
+        @FXML
+        private TextField priceTextField;
 
-    @FXML
-    private Button sellButton;
+        @FXML
+        private Button sellButton;
 
-    @FXML
-    private ChoiceBox<?> sizeChoiceBox;
+        @FXML
+        private ChoiceBox<String> sizeChoiceBox;
 
-    @FXML
-    private ChoiceBox<?> transmissionChoiceBox;
+        @FXML
+        private ChoiceBox<String> transmissionChoiceBox;
 
-    @FXML
-    private ChoiceBox<?> typeChoiceBox;
+        @FXML
+        private ChoiceBox<String> typeChoiceBox;
 
-    @FXML
-    private TextField vinTextField;
+        @FXML
+        private TextField vinTextField;
 
-    @FXML
-    private TextField yearTextField;
+        @FXML
+        private TextField yearTextField;
 
-    @FXML
-    private Label sellMessageLabel;
-    
-	@Override
+        @FXML
+        private Label sellMessageLabel;
+        
+        
+    @Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		User u = (User) cache.get("user");
+		// Get user from cache
+    	User u = (User) cache.get("user");
+    	
+    	// Get user's name
+    	nameLabel.setText(u.getFirstName() + " " + u.getLastName());
+    	
+    	// Init choice boxes
+    	cylinderChoiceBox.getItems().addAll("Four", "Six", "Eight", "Twelve");
+    	fuelChoiceBox.getItems().addAll("Gasoline", "Diesel", "Electric", "Hybrid");
+    	sizeChoiceBox.getItems().addAll("Compact", "Mid", "Full");
+    	transmissionChoiceBox.getItems().addAll("Automatic", "Manual");
+    	typeChoiceBox.getItems().addAll("Coupe", "Crossover", "Truck", "Sedan", "Sportscar", "Hatchback");
 		
-		// Set user's name
-		nameLabel.setText(u.getFirstName() + " " + u.getLastName());
 	}
-    
+
     public void cancelButtonOnAction(ActionEvent event) throws IOException {
-        Parent listingPageParent = FXMLLoader.load(getClass().getResource("listing.fxml"));
-        Scene listingPageScene = new Scene(listingPageParent);
-        Stage appStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        appStage.setScene(listingPageScene);
-        appStage.show();
+		m.changeScene("listing.fxml");
     }
 
-    public void sellButtonOnAction(ActionEvent event) {
-        if (vinTextField.getText().isBlank() || yearTextField.getText().isBlank() ||
-                mileageTextField.getText().isBlank() || priceTextField.getText().isBlank() ||
-                typeChoiceBox.getSelectionModel().isEmpty() || transmissionChoiceBox.getSelectionModel().isEmpty()
-                || sizeChoiceBox.getSelectionModel().isEmpty() || cylinderChoiceBox.getSelectionModel().isEmpty() ||
-                fuelChoiceBox.getSelectionModel().isEmpty() || makeComboBox.getSelectionModel().isEmpty() ||
-                modelComboBox.getSelectionModel().isEmpty() || copComboBox.getSelectionModel().isEmpty()) {
-        	sellMessageLabel.setText("Please provide information for all fields.");
+    public void sellButtonOnAction(ActionEvent event) throws IOException {
+    	if (vinTextField.getText().isBlank() || yearTextField.getText().isBlank() || mileageTextField.getText().isBlank() || priceTextField.getText().isBlank() || typeChoiceBox.getSelectionModel().isEmpty() || transmissionChoiceBox.getSelectionModel().isEmpty() || sizeChoiceBox.getSelectionModel().isEmpty() || cylinderChoiceBox.getSelectionModel().isEmpty() || fuelChoiceBox.getSelectionModel().isEmpty() || makeTextField.getText().isBlank() || modelTextField.getText().isBlank() || copTextField.getText().isBlank()) { 
+    		sellMessageLabel.setText("Please provide information for all fields.");
         } else {
         	//I'll assume saving the above fields into the datebase goes here
+        	
+        	// Return to listings once database has been updated.
+    		m.changeScene("listing.fxml");
         }
     }
 }

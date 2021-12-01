@@ -1,30 +1,35 @@
 package main;
+	
+import java.io.IOException;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.fxml.FXMLLoader;
 
-import static cache.Caching.cache;
 
 public class Main extends Application {
-
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
-        primaryStage.initStyle(StageStyle.UNDECORATED);
-        primaryStage.setScene(new Scene(root, 520, 400));
-        primaryStage.show();
-    }
-
-    @Override
-    public void stop() {
-    	cache.clear();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
+	
+	private static Stage stg;
+	
+	@Override
+	public void start(Stage primaryStage) throws IOException {
+		stg = primaryStage;
+		primaryStage.setResizable(false);
+		Parent root = FXMLLoader.load(getClass().getResource("login.fxml"));
+		Scene scene = new Scene(root,800,600);
+		primaryStage.setTitle("Vehicle Listings");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+	
+	public void changeScene(String fxml) throws IOException {
+		Parent pane = FXMLLoader.load(getClass().getResource(fxml));
+		stg.getScene().setRoot(pane);
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
 }

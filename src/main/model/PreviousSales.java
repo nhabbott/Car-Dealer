@@ -1,7 +1,5 @@
 package main.model;
 
-import javafx.scene.control.Button;
-
 public class PreviousSales {
 
     String name, vin, make, model, year, mileage, price;
@@ -75,6 +73,3 @@ public class PreviousSales {
     }
 
 }
-
-
-

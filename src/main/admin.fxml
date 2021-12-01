@@ -20,7 +20,10 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button fx:id="exitButton" layoutX="711.0" layoutY="22.0" mnemonicParsing="false" onAction="#exitButtonOnAction" text="Exit" />
+            <Button fx:id="exitButton" layoutX="716.0" layoutY="20.0" mnemonicParsing="false" onAction="#exitButtonOnAction" style="-fx-background-color: #ac8acd;" text="Log Out" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
             <Label fx:id="adminNameLabel" layoutX="81.0" layoutY="21.0" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="18.0" />
