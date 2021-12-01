@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.Query;
 
 import exceptions.DatabaseErrorException;
 import objects.Listing;
@@ -159,9 +160,89 @@ public class ListingManager {
     	return listings;
     }
     
-    public void update(long id) {
+	@SuppressWarnings("unchecked")
+	public List<Listing> getAllRequests() throws DatabaseErrorException {
+    	// Open session and create return var
+    	Session session = sessionFactory.openSession();
+    	List<Listing> listings = null;
     	
+    	// Get from DB
+    	try {
+    		session.beginTransaction();
+    		listings = session.createSQLQuery("SELECT * FROM listing WHERE publishListing=0 AND isSold=0").list();
+    		session.getTransaction().commit();
+    	} catch (HibernateException e) {
+    		session.getTransaction().rollback();
+    		throw new DatabaseErrorException("There was an error retreiving all requests: ", e);
+    	} finally {
+    		session.close();
+    	}
+    	
+    	return listings;
     }
+	
+	@SuppressWarnings("unchecked")
+	public List<Listing> getAllSold() throws DatabaseErrorException {
+    	// Open session and create return var
+    	Session session = sessionFactory.openSession();
+    	List<Listing> listings = null;
+    	
+    	// Get from DB
+    	try {
+    		session.beginTransaction();
+    		listings = session.createSQLQuery("SELECT * FROM listing WHERE isSold=1").list();
+    		session.getTransaction().commit();
+    	} catch (HibernateException e) {
+    		session.getTransaction().rollback();
+    		throw new DatabaseErrorException("There was an error retreiving all sold listings: ", e);
+    	} finally {
+    		session.close();
+    	}
+    	
+    	return listings;
+    }
+	
+	@SuppressWarnings("rawtypes")
+	public void setPublished(long id) throws DatabaseErrorException {
+		// Open session
+		Session session = sessionFactory.openSession();
+		Query q;
+		
+		// Talk to DB
+		try {
+			session.beginTransaction();
+			q = session.createSQLQuery("UPDATE listing SET publishListing=1 WHERE listingId=:param1");
+			q.setParameter("param1", id);
+			q.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+			throw new DatabaseErrorException("There was an error publishing the listing", e);
+		} finally {
+			session.close();
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void setSold(long id) throws DatabaseErrorException {
+		// Open session
+		Session session = sessionFactory.openSession();
+		Query q;
+		
+		// Talk to DB
+		try {
+			session.beginTransaction();
+			q = session.createSQLQuery("UPDATE listing SET (publishListing=0,isSold=1) WHERE listingId=:param1");
+			q.setParameter("param1", id);
+			q.executeUpdate();
+			session.getTransaction().commit();
+		} catch (HibernateException e) {
+			session.getTransaction().rollback();
+			throw new DatabaseErrorException("There was an error publishing the listing", e);
+		} finally {
+			session.close();
+		}
+	}
     
     /**
      * Deletes a vehicle from the DB by id

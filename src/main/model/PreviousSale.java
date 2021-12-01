@@ -8,9 +8,10 @@ import managers.UserManager;
 import objects.Listing;
 import objects.User;
 
-public class ListingInfo {
-
+public class PreviousSale {
 	private UserManager um = new UserManager();
+	
+	private final long id;
 	
 	private final SimpleStringProperty name;
 	private final SimpleStringProperty vin;
@@ -20,8 +21,7 @@ public class ListingInfo {
 	private final SimpleIntegerProperty mileage;
 	private final SimpleFloatProperty price;
 	
-	
-	public ListingInfo(Listing l) {
+	public PreviousSale(Listing l) {
 		// Get user info
 		User u = null;
 		um.setup();
@@ -34,6 +34,8 @@ public class ListingInfo {
 			um.exit();
 		}
 		
+		this.id = l.getId();
+		
 		this.name = new SimpleStringProperty(u.getUserName());
 		this.vin = new SimpleStringProperty(l.getVehicle().getVin());
 		this.make = new SimpleStringProperty(l.getVehicle().getMake());
@@ -41,9 +43,11 @@ public class ListingInfo {
 		this.year = new SimpleIntegerProperty(l.getVehicle().getYear());
 		this.mileage = new SimpleIntegerProperty(l.getVehicle().getMileage());
 		this.price = new SimpleFloatProperty(l.getPrice());
-		
 	}
 	
+	public long getId() {
+		return this.id;
+	}
 	public String getName() {
 		return name.get();
 	}
@@ -65,7 +69,4 @@ public class ListingInfo {
 	public float getPrice() {
 		return price.get();
 	}
-	
-	
 }
-

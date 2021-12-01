@@ -1,25 +1,40 @@
 package main;
 
-import main.model.PreviousSales;
+import main.model.PreviousSale;
 import main.model.Request;
+import managers.ListingManager;
+import objects.Listing;
+import objects.RequestButton;
+import objects.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Stage;
+
+import static cache.Caching.cache;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
+
+import exceptions.DatabaseErrorException;
 
 public class AdminController implements Initializable {
 
+	// For scene changes
+	private Main m = new Main();
+	
+	// For DB
+	private ListingManager lm = new ListingManager();
+	
     @FXML
-    private TableView<?> requestTableView;
+    private TableView<Request> requestTableView;
 
     @FXML
     private TableView<?> sellsTableView;
@@ -34,43 +49,43 @@ public class AdminController implements Initializable {
     private TableColumn<Request, String> makeTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> makeTableColumnS;
+    private TableColumn<PreviousSale, String> makeTableColumnS;
 
     @FXML
     private TableColumn<Request, String> mileageTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> mileageTableColumnS;
+    private TableColumn<PreviousSale, String> mileageTableColumnS;
 
     @FXML
     private TableColumn<Request, String> modelTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> modelTableColumnS;
+    private TableColumn<PreviousSale, String> modelTableColumnS;
 
     @FXML
     private TableColumn<Request, String> nameTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> nameTableColumnS;
+    private TableColumn<PreviousSale, String> nameTableColumnS;
 
     @FXML
     private TableColumn<Request, String> priceTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> priceTableColumnS;
+    private TableColumn<PreviousSale, String> priceTableColumnS;
 
     @FXML
     private TableColumn<Request, String> vinTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> vinTableColumnS;
+    private TableColumn<PreviousSale, String> vinTableColumnS;
 
     @FXML
     private TableColumn<Request, String> yearTableColumnR;
 
     @FXML
-    private TableColumn<PreviousSales, String> yearTableColumnS;
+    private TableColumn<PreviousSale, String> yearTableColumnS;
 
     @FXML
     private TextField makeAdminTextField;
@@ -83,14 +98,37 @@ public class AdminController implements Initializable {
 
     @FXML
     private Label adminNameLabel;
+    
+    private ObservableList<Request> requestData = FXCollections.observableArrayList();
+    private ObservableList<PreviousSale> soldData = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initTable();
+        // Get user
+    	User u = (User) cache.get("user");
+    	
+    	// Set user label
+    	adminNameLabel.setText(u.getFirstName() + " " + u.getLastName());
+    	
+    	// Init ListingManager
+    	lm.setup();
+    	
+    	// Fill table
+    	initTable();
     }
 
     private void initTable() {
-
+    	
+    	// Setup request table
+    	initColumnsR();
+    	if (!cache.contains("requests")) { 
+    		loadDataR();
+    	}
+    	
+    	requestTableView.setItems(requestData);
+    	
+    	// Setup sold table
+    	initColumnsS();
     }
 
     private void initColumnsR() {
@@ -105,7 +143,7 @@ public class AdminController implements Initializable {
         acceptTableColumnR.setCellValueFactory(new PropertyValueFactory<>("accept"));
         declineTableColumnR.setCellValueFactory(new PropertyValueFactory<>("decline"));
 
-        editableCols();
+        //editableCols();
     }
 
     private void initColumnsS() {
@@ -118,10 +156,10 @@ public class AdminController implements Initializable {
         mileageTableColumnS.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         priceTableColumnS.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        editableCols();
+        //editableCols();
     }
 
-    private void editableCols() {
+    /*private void editableCols() {
 
         nameTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
 
@@ -167,7 +205,7 @@ public class AdminController implements Initializable {
 
         requestTableView.setEditable(true);
         sellsTableView.setEditable(true);
-    }
+    }*/
 
 
     public void makeAdminButtonOnAction(ActionEvent event) {
@@ -175,17 +213,112 @@ public class AdminController implements Initializable {
     }
 
     public void exitButtonOnAction(ActionEvent event) throws IOException {
-    	Main m = new Main();
 		m.changeScene("login.fxml");
     }
 
     private void loadDataR() {
-        ObservableList<Request> requestData = FXCollections.observableArrayList();
-        // add data here for request dont forget to add accept and decline button
+		List<Listing> listings = null;
+		
+		try {
+			// Get all pending listings
+			listings = lm.getAllRequests();
+			
+			// Cache all pending listings to memory for 30 min
+			cache.add("requests", listings, TimeUnit.MINUTES.toMillis(30));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			lm.exit();
+		}
+		
+		if (listings != null) {
+			listings.forEach((p) -> {
+				// Add request
+				Request r = new Request(p);
+				
+				// Setup buttons
+				r.getAcceptButton().setOnAction(acceptButtonHandler);
+				r.getDeclineButton().setOnAction(declineButtonHandler);
+				
+				requestData.add(r);
+			});
+		}
     }
 
-    // private void loadDataS() {
-    //    ObservableList<Request> requestData = FXCollections.observableArrayList();
-    //
-    // }
+     private void loadDataS() {
+ 		List<Listing> listings = null;
+		
+ 		try {
+ 			// Get all pending listings
+ 			listings = lm.getAllSold();
+ 			
+ 			// Cache all sold listings to memory for 30 min
+ 			cache.add("sold", listings, TimeUnit.MINUTES.toMillis(30));
+ 		} catch (Exception e) {
+ 			e.printStackTrace();
+ 		} finally {
+ 			lm.exit();
+ 		}
+ 		
+ 		if (listings != null) {
+	 		listings.forEach((p) -> {
+	 			// Add sale
+	 			PreviousSale r = new PreviousSale(p);
+	 			soldData.add(r);
+	 		});
+ 		}
+     }
+    
+	// Buttons
+	EventHandler<ActionEvent> acceptButtonHandler = new EventHandler<ActionEvent>() {
+		@SuppressWarnings("unchecked")
+		@Override
+		public void handle(ActionEvent e) {
+			// Init ListingManager
+			lm.setup();
+			
+			// Get needed info
+			RequestButton b = (RequestButton) e.getSource();
+			long listingId = (long) b.getRequest().getId();
+			
+			// Publish listing
+			try {
+				lm.setPublished(listingId);
+			} catch (DatabaseErrorException e1) {
+				e1.printStackTrace();
+			} finally {
+				lm.exit();
+			}
+			
+			// Fix the cache
+			if (cache.contains("requests")) {
+				List<Listing> l = (List<Listing>) cache.get("requests");
+				l.forEach(p -> {
+					if (p.getId() == listingId) {
+						l.remove(p);
+					}
+				});
+				
+				cache.remove("requests");
+				cache.add("requests", l, TimeUnit.MINUTES.toMillis(30));
+			}
+			
+			// Remove from table
+			//requestTableView.
+			
+			// Update sold table
+			//loadDataS();
+			//sellsTableView.setItems(soldData);
+			
+			// End event
+			e.consume();
+		}
+	};
+	
+	EventHandler<ActionEvent> declineButtonHandler = new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(ActionEvent e) {
+			e.consume();
+		}
+	};
 }

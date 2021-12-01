@@ -1,31 +1,12 @@
-Backend
- - Finish ListingManager
-   - Implement update()
- 
- - Finish UserManager
-   - Implement update()
-   
- - Finish VehicleManager
-   - Implement update()
- 
- - Finish WishlistManager
-   - Implement update()
-   
+Backend  
  - Finish JUnit Tests
    
 Frontend
- - Login screen
- 
- - Registration screen
-   - Collect first & last name, username, password, & email
- 
- - Listings screen
-   - View current listings
- 
- - Admin screen
-   - View requests
-   - View previous sells
-   - Make other users admins
-   
- - Sell screen
-   - Collect vehicle info
+ - Admin View
+ 	- Make admin screen should show searchable list of users
+ 	- Finish decline button logic
+ 	- Figure out column editing
+    - Refresh button for admin requests view
+ - Purchase View
+ - Sell View
+ - Password Reset

@@ -84,7 +84,7 @@ public class MemoryCache implements Cache {
 	 */
 	@Override
 	public void remove(String key) {
-		cache.remove(key);
+		if (cache.contains(key)) { cache.remove(key); }
 	}
 	
 	/**

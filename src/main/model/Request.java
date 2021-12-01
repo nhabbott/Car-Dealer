@@ -1,95 +1,88 @@
 package main.model;
 
-import javafx.scene.control.Button;
+import exceptions.DatabaseErrorException;
+import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import managers.UserManager;
+import objects.Listing;
+import objects.RequestButton;
+import objects.User;
 
 public class Request {
-    String name, vin, make, model, year, mileage, price;
-
-    Button accept;
-    Button decline;
-
-    public Request(String name, String vin, String make, String model, String year, String mileage, String price
-                    ,Button accept, Button decline) {
-        this.name = name;
-        this.vin = vin;
-        this.make = make;
-        this.model = model;
-        this.year = year;
-        this.mileage = mileage;
-        this.price = price;
-        this.accept = accept;
-        this.decline = decline;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVin() {
-        return vin;
-    }
-
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
-
-    public String getMake() {
-        return make;
-    }
-
-    public void setMake(String make) {
-        this.make = make;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getYear() {
-        return year;
-    }
-
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getMileage() {
-        return mileage;
-    }
-
-    public void setMileage(String mileage) {
-        this.mileage = mileage;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public Button getAccept() {
-        return accept;
-    }
-
-    public void setAccept(Button accept) {
-        this.accept = accept;
-    }
-
-    public Button getDecline() {
-        return decline;
-    }
-
-    public void setDecline(Button decline) {
-        this.decline = decline;
-    }
+	private UserManager um = new UserManager();
+	
+	private final long id;
+	
+	private final SimpleStringProperty name;
+	private final SimpleStringProperty vin;
+	private final SimpleStringProperty make;
+	private final SimpleStringProperty model;
+	private final SimpleIntegerProperty year;
+	private final SimpleIntegerProperty mileage;
+	private final SimpleFloatProperty price;
+	
+	private final RequestButton accept;
+    private final RequestButton decline;
+	
+	public Request(Listing l) {
+		// Get user info
+		User u = null;
+		um.setup();
+		
+		try {
+			u = (User) um.get(l.getUserId());
+		} catch (DatabaseErrorException e) {
+			e.printStackTrace();
+		} finally {
+			um.exit();
+		}
+		
+		// Setup buttons
+		this.accept = new RequestButton(this);
+		this.decline = new RequestButton(this);
+		accept.setText("Approve");
+		decline.setText("Deny");
+		
+		this.id = l.getId();
+		
+		this.name = new SimpleStringProperty(u.getUserName());
+		this.vin = new SimpleStringProperty(l.getVehicle().getVin());
+		this.make = new SimpleStringProperty(l.getVehicle().getMake());
+		this.model = new SimpleStringProperty(l.getVehicle().getModel());
+		this.year = new SimpleIntegerProperty(l.getVehicle().getYear());
+		this.mileage = new SimpleIntegerProperty(l.getVehicle().getMileage());
+		this.price = new SimpleFloatProperty(l.getPrice());
+	}
+	
+	public long getId() {
+		return this.id;
+	}
+	public String getName() {
+		return name.get();
+	}
+	public String getVin() {
+		return vin.get();
+	}
+	public String getMake() {
+		return make.get();
+	}
+	public String getModel() {
+		return model.get();
+	}
+	public int getYear() {
+		return year.get();
+	}
+	public int getMileage() {
+		return mileage.get();
+	}
+	public float getPrice() {
+		return price.get();
+	}
+	public RequestButton getAcceptButton() {
+		return accept;
+	}
+	public RequestButton getDeclineButton() {
+		return decline;
+	}
 }
