@@ -1,3 +1,5 @@
+# Compilation Instructions
+
 In order to make vehicles and listings persistent, we need a third-party library. This library has already been added to .classpath file of this eclipse project. 
 To make the project compile, you need to create the following folder located at C:\JARs\Hibernate. 
 
@@ -14,3 +16,9 @@ Next, download the Javax Mailer JAR from https://github.com/javaee/javamail/rele
 Then place the JAR in C:\JARs
 
 After doing this, you should be able to compile like normal.
+
+# Backend Instructions
+This project requires the use of a MySQL Server. It must have the following:
+1. A database named carsdb.
+2. A user named cars with a password of TheSUperSecurePassword123! and it must have all permissions granted for the carsdb database.
+3. The carsdb databse must be initialized with the initDB.sql file that can be found in the root of this project's directory.
