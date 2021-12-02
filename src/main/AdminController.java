@@ -35,67 +35,66 @@ public class AdminController implements Initializable {
 	
     @FXML
     private TableView<Request> requestTableView;
-
     @FXML
     private TableView<PreviousSale> sellsTableView;
-
     @FXML
     private TableColumn<Request, Button> acceptTableColumnR;
-
     @FXML
     private TableColumn<Request, Button> declineTableColumnR;
-
     @FXML
     private TableColumn<Request, String> makeTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> makeTableColumnS;
-
     @FXML
     private TableColumn<Request, String> mileageTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> mileageTableColumnS;
-
     @FXML
     private TableColumn<Request, String> modelTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> modelTableColumnS;
-
     @FXML
     private TableColumn<Request, String> nameTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> nameTableColumnS;
-
     @FXML
     private TableColumn<Request, String> priceTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> priceTableColumnS;
-
     @FXML
     private TableColumn<Request, String> vinTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> vinTableColumnS;
-
     @FXML
     private TableColumn<Request, String> yearTableColumnR;
-
     @FXML
     private TableColumn<PreviousSale, String> yearTableColumnS;
-
+    @FXML
+    private TableView<User> userListTable;
+    @FXML
+    private TableColumn<User, String> usernameColumn;
+    @FXML
+    private TableColumn<User, String> firstNameColumn;
+    @FXML
+    private TableColumn<User, String> lastNameColumn;
+    @FXML
+    private TableColumn<User, String> emailColumn;
+    @FXML
+    private TableColumn<User, String> passwordColumn;
+    @FXML
+    private TableColumn<User, String> isAdminColumn;
+    @FXML
+    private TextField usernameSearchBar;
     @FXML
     private TextField makeAdminTextField;
-
     @FXML
     private Button makeAdminButton;
-
+    @FXML
+    private Button toListingsButton;
     @FXML
     private Button exitButton;
-
+    @FXML
+    private Button refreshButton;
     @FXML
     private Label adminNameLabel;
     
@@ -226,8 +225,30 @@ public class AdminController implements Initializable {
         requestTableView.setEditable(true);
         sellsTableView.setEditable(true);
     }*/
+    
+    
+    public void refresh(ActionEvent e) {
+    	// Update admin request views.
+    }
+    
+    
+    public void searchUsername(ActionEvent e) {
+    	
+    	String username = usernameSearchBar.getText();
+    	
+    	// Search user list for given username
+    }
 
 
+    /**
+	 * Scene changer
+	 * @param e
+	 * @throws IOException
+	 */
+	public void goToListings(ActionEvent e) throws IOException {
+		m.changeScene("listing.fxml");
+	}
+    
     /**
      * Action for makeAdminButton
      * @param event - ActionEvent from button
