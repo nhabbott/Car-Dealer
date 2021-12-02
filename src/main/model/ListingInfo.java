@@ -1,19 +1,13 @@
 package main.model;
 
-import exceptions.DatabaseErrorException;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import managers.UserManager;
 import objects.Listing;
-import objects.User;
 import objects.Vehicle;
 
 public class ListingInfo {
-
-	private UserManager um = new UserManager();
 	
-	private final SimpleStringProperty name;
 	private final SimpleStringProperty vin;
 	private final SimpleStringProperty make;
 	private final SimpleStringProperty model;
@@ -27,21 +21,8 @@ public class ListingInfo {
 	 * @see Listing
 	 */
 	public ListingInfo(Listing l) {
-		// Get user info
-		User u = null;
-		um.setup();
-		
-		try {
-			u = (User) um.get(l.getUserId());
-		} catch (DatabaseErrorException e) {
-			e.printStackTrace();
-		} finally {
-			um.exit();
-		}
-		
 		Vehicle v = l.getVehicle();
 		
-		this.name = new SimpleStringProperty(u.getUserName());
 		this.vin = new SimpleStringProperty(v.getVin());
 		this.make = new SimpleStringProperty(v.getMake());
 		this.model = new SimpleStringProperty(v.getModel());
@@ -49,14 +30,6 @@ public class ListingInfo {
 		this.mileage = new SimpleIntegerProperty(v.getMileage());
 		this.price = new SimpleFloatProperty(l.getPrice());
 		
-	}
-	
-	/**
-	 * Gets the username of the user who made the list
-	 * @return String
-	 */
-	public String getName() {
-		return name.get();
 	}
 	
 	/**

@@ -173,7 +173,7 @@ public class ListingManager {
     	// Get from DB
     	try {
     		session.beginTransaction();
-    		listings = session.createSQLQuery("SELECT * FROM listing WHERE publishListing=0 AND isSold=0").list();
+    		listings = (List<Listing>) session.createQuery("FROM Listing WHERE publishListing=0 AND isSold=0").list();
     		session.getTransaction().commit();
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();
@@ -199,11 +199,40 @@ public class ListingManager {
     	// Get from DB
     	try {
     		session.beginTransaction();
-    		listings = session.createSQLQuery("SELECT * FROM listing WHERE isSold=1").list();
+    		listings = (List<Listing>) session.createQuery("FROM Listing WHERE isSold=1").list();
     		session.getTransaction().commit();
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();
     		throw new DatabaseErrorException("There was an error retreiving all sold listings: ", e);
+    	} finally {
+    		session.close();
+    	}
+    	
+    	return listings;
+    }
+	
+	/**
+	 * Gets all of a user's listings from the DB
+	 * @return List<Listing>
+	 * @throws DatabaseErrorException
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Listing> getUsersListings(long id) throws DatabaseErrorException {
+    	// Open session and create return var
+    	Session session = sessionFactory.openSession();
+    	List<Listing> listings = null;
+    	Query q;
+    	
+    	// Get from DB
+    	try {
+    		session.beginTransaction();
+    		q = session.createQuery("FROM Listing WHERE userId=:param1 AND isSold=0");
+    		q.setParameter("param1", id);
+    		listings = q.getResultList();
+    		session.getTransaction().commit();
+    	} catch (HibernateException e) {
+    		session.getTransaction().rollback();
+    		throw new DatabaseErrorException("There was an error retreiving all of a user's listings: ", e);
     	} finally {
     		session.close();
     	}

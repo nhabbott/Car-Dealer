@@ -20,37 +20,87 @@ import javax.persistence.UniqueConstraint;
 })
 public class Vehicle {
 	public enum vehicleType {
-		coupe,
-		crossover,
-		truck,
-		sedan,
-		sportscar,
-		hatchback
+		coupe("coupe"),
+		crossover("crossover"),
+		truck("truck"),
+		sedan("sedan"),
+		sportscar("sportscar"),
+		hatchback("hatchback");
+
+		private String choice;
+		
+		vehicleType(String choice) {
+			this.choice = choice;
+		}
+		
+		public String getChoice() {
+			return choice;
+		}
 	}
 	
 	public enum vehicleSize {
-		compact,
-		mid,
-		full
+		compact("compact"),
+		mid("mid"),
+		full("full");
+		
+		private String choice;
+		
+		vehicleSize(String choice) {
+			this.choice = choice;
+		}
+		
+		public String getChoice() {
+			return choice;
+		}
 	}
 	
 	public enum vehicleTrans {
-		automatic,
-		manual
+		automatic("automatic"),
+		manual("manual");
+		
+		private String choice;
+		
+		vehicleTrans(String choice) {
+			this.choice = choice;
+		}
+		
+		public String getChoice() {
+			return choice;
+		}
 	}
 	
 	public enum numOfCylinders {
-		four,
-		six,
-		eight,
-		twelve
+		four("four"),
+		six("six"),
+		eight("eight"),
+		twelve("twelve");
+		
+		private String choice;
+		
+		numOfCylinders(String choice) {
+			this.choice = choice;
+		}
+		
+		public String getChoice() {
+			return choice;
+		}
 	}
 	
 	public enum fuelType {
-		gasoline,
-		diesel,
-		electric,
-		hybrid
+		gasoline("gasoline"),
+		diesel("diesel"),
+		electric("electric"),
+		hybrid("hybrid");
+		
+		private String choice;
+		
+		fuelType(String choice) {
+			this.choice = choice;
+		}
+		
+		public String getChoice() {
+			return choice;
+		}
 	}
 	
 	//TODO Figure out implementation of optional features, color, fuel economy, history, and location

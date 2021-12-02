@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import static cache.Caching.cache;
 
@@ -159,6 +160,9 @@ public class AdminController implements Initializable {
         acceptTableColumnR.setCellValueFactory(new PropertyValueFactory<>("accept"));
         declineTableColumnR.setCellValueFactory(new PropertyValueFactory<>("decline"));
 
+        // Buttons
+        addTableButtons();
+        
         //editableCols();
     }
 
@@ -178,6 +182,10 @@ public class AdminController implements Initializable {
         //editableCols();
     }
 
+    private void addTableButtons() {
+    	
+    }
+    
     /*private void editableCols() {
 
         nameTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -289,8 +297,14 @@ public class AdminController implements Initializable {
 				Request r = new Request(p);
 				
 				// Setup buttons
-				r.getAcceptButton().setOnAction(acceptButtonHandler);
-				r.getDeclineButton().setOnAction(declineButtonHandler);
+				RequestButton a = new RequestButton(r);
+				RequestButton d = new RequestButton(r);
+				
+				a.setText("Accept");
+				d.setText("Deny");
+				
+				r.setAcceptButton(a);
+				r.setDeclineButton(d);
 				
 				requestData.add(r);
 			});

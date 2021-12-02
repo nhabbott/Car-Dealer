@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import exceptions.DatabaseErrorException;
+
 import static cache.Caching.cache;
 
 import javafx.collections.FXCollections;
@@ -17,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import main.model.ListingInfo;
 import managers.ListingManager;
 import objects.Listing;
@@ -29,6 +32,9 @@ public class ListingController implements Initializable {
 	
 	// For retrieving listings
 	private ListingManager lm = new ListingManager();
+	
+	// Get User
+	User u = (User) cache.get("user");
 	
 	@FXML
 	private Button sellVehicleButton;
@@ -73,7 +79,8 @@ public class ListingController implements Initializable {
 	@FXML 
 	private TableColumn<ListingInfo, Integer> myPriceColumn;
 		
-	private ObservableList<ListingInfo> data = FXCollections.observableArrayList();
+	private ObservableList<ListingInfo> listingData = FXCollections.observableArrayList();
+	private ObservableList<ListingInfo> userListingData = FXCollections.observableArrayList();
 	
 	/**
 	 * Scene changer
@@ -90,9 +97,6 @@ public class ListingController implements Initializable {
 	 * @throws IOException
 	 */
 	public void goToAdmin(ActionEvent e) throws IOException {
-		// Check admin qualifications
-		//TODO
-		
 		m.changeScene("admin.fxml");
 	}
 	
@@ -117,23 +121,58 @@ public class ListingController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// Get user from cache
-		User u = (User) cache.get("user");
+		// Check admin button
+		if (u.isAdmin()) {
+			toAdminButton.setDisable(false);
+		} else {
+			toAdminButton.setDisable(true);
+		}
 		
 		// Get user's name
 		username.setText(u.getFirstName() + " " + u.getLastName());
 		
-		// Update Table
-		populate(retrieveData());
-		table.setItems(data);
+		// Init table columns
+		initColumnsL();
+		initColumnsLU();
+		
+		// Update listing table
+		populateListings(retrieveListingData());
+		table.setItems(listingData);
+		
+		// Update user's listing table
+		populateUserListings(retrieveUserListingData());
+		myTable.setItems(userListingData);
 	}
 
+    /**
+     * Initializes the listing column headers
+     */
+    private void initColumnsL() {
+    	VINColumn.setCellValueFactory(new PropertyValueFactory<>("vin"));
+        makeColumn.setCellValueFactory(new PropertyValueFactory<>("make"));
+        modelColumn.setCellValueFactory(new PropertyValueFactory<>("model"));
+        yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+        mileageColumn.setCellValueFactory(new PropertyValueFactory<>("mileage"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    }
+
+    /**
+     * Initializes the user listing column headers
+     */
+    private void initColumnsLU() {
+    	myVINColumn.setCellValueFactory(new PropertyValueFactory<>("vin"));
+        myMakeColumn.setCellValueFactory(new PropertyValueFactory<>("make"));
+        myModelColumn.setCellValueFactory(new PropertyValueFactory<>("model"));
+        myYearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
+        myMileageColumn.setCellValueFactory(new PropertyValueFactory<>("mileage"));
+        myPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    }
 	
 	/**
-	 * Get info from DB for the tables
+	 * Get listing info from DB
 	 * @return List<Listing>
 	 */
-	private List<Listing> retrieveData() {
+	private List<Listing> retrieveListingData() {
 		lm.setup();
 		
 		// Return var
@@ -143,19 +182,42 @@ public class ListingController implements Initializable {
 			listings = lm.getAll();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			lm.exit();
 		}
 		
 		return listings;
 	}
 	
 	/**
-	 * Create table info from listings
-	 * @param listings - List of listings
+	 * Get user's active listings from DB
+	 * @return List<Listing>
 	 */
-	private void populate(final List<Listing> listings) {
-		listings.forEach(p -> data.add(new ListingInfo(p)));
+	private List<Listing> retrieveUserListingData() {
+		// Return var
+		List<Listing> listings = null;
+		
+		try {
+			listings = lm.getUsersListings(u.getId());
+		} catch (DatabaseErrorException e) {
+			e.printStackTrace();
+		}
+		
+		return listings;
+	}
+	
+	/**
+	 * Create talbe info from listings
+	 * @param List<Listing>
+	 */
+	private void populateUserListings(final List<Listing> listings) {
+		listings.forEach(p -> userListingData.add(new ListingInfo(p)));
+	}
+	
+	/**
+	 * Create table info from listings
+	 * @param List<Listing>
+	 */
+	private void populateListings(final List<Listing> listings) {
+		listings.forEach(p -> listingData.add(new ListingInfo(p)));
 	}
 }
 

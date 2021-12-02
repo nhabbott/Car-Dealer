@@ -22,8 +22,8 @@ public class Request {
 	private final SimpleIntegerProperty mileage;
 	private final SimpleFloatProperty price;
 	
-	private final RequestButton accept;
-    private final RequestButton decline;
+	private RequestButton accept;
+    private RequestButton decline;
 	
     /**
      * Class constructor specifying the listing
@@ -125,20 +125,20 @@ public class Request {
 	}
 	
 	/**
-	 * Gets the accept button for the listing
-	 * @return RequestButton
+	 * Sets the accept button for the listing
+	 * @param RequestButton
 	 * @see RequestButton
 	 */
-	public RequestButton getAcceptButton() {
-		return accept;
+	public void setAcceptButton(RequestButton a) {
+		this.accept = a;
 	}
 	
 	/**
-	 * Gets the decline button for the listing
-	 * @return RequestButton
+	 * Sets the accept button for the listing
+	 * @param RequestButton
 	 * @see RequestButton
 	 */
-	public RequestButton getDeclineButton() {
-		return decline;
+	public void setDeclineButton(RequestButton d) {
+		this.decline = d;
 	}
 }
