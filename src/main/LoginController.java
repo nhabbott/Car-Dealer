@@ -97,7 +97,7 @@ public class LoginController implements Initializable {
      * @throws IOException
      */
     public void forgotPasswordButtonOnAction(ActionEvent event) throws IOException {
-    	//
+    	m.changeScene("forgotPassword.fxml");
     }
 
     /**
@@ -126,10 +126,12 @@ public class LoginController implements Initializable {
 		    	}
 			} else {
 				loginMessageLabel.setText("Incorrect username or password");
+				loginSpinner.setVisible(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			loginMessageLabel.setText("Incorrect username or password");
+			loginSpinner.setVisible(false);
 		} finally {
 			um.exit();
 		}
