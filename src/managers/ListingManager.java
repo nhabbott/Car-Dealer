@@ -147,7 +147,7 @@ public class ListingManager {
     	// Get from DB
     	try {
     		session.beginTransaction();
-    		listings = session.createQuery("FROM listing").list();
+    		listings = (List<Listing>) session.createQuery("FROM Listing WHERE publishListing=1 AND isSold=0").list();
     		session.getTransaction().commit();
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();

@@ -6,6 +6,7 @@
         <property name="connection.username">cars</property>  
         <property name="connection.password">TheSUperSecurePassword123!</property>  
         <property name="show_sql">true</property>
+        <property name="use_legacy_limit_handlers">true</property>
 
         <mapping class="objects.Vehicle"/>
         <mapping class="objects.Listing"/>

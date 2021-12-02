@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import managers.UserManager;
 import objects.Listing;
 import objects.User;
+import objects.Vehicle;
 
 public class ListingInfo {
 
@@ -38,12 +39,14 @@ public class ListingInfo {
 			um.exit();
 		}
 		
+		Vehicle v = l.getVehicle();
+		
 		this.name = new SimpleStringProperty(u.getUserName());
-		this.vin = new SimpleStringProperty(l.getVehicle().getVin());
-		this.make = new SimpleStringProperty(l.getVehicle().getMake());
-		this.model = new SimpleStringProperty(l.getVehicle().getModel());
-		this.year = new SimpleIntegerProperty(l.getVehicle().getYear());
-		this.mileage = new SimpleIntegerProperty(l.getVehicle().getMileage());
+		this.vin = new SimpleStringProperty(v.getVin());
+		this.make = new SimpleStringProperty(v.getMake());
+		this.model = new SimpleStringProperty(v.getModel());
+		this.year = new SimpleIntegerProperty(v.getYear());
+		this.mileage = new SimpleIntegerProperty(v.getMileage());
 		this.price = new SimpleFloatProperty(l.getPrice());
 		
 	}

@@ -141,7 +141,6 @@ public class Vehicle {
 	 * Gets the id of the vehicle
 	 * @return long
 	 */
-	@Id
 	public long getId() {
 		return id;
 	}

@@ -24,10 +24,10 @@ import objects.User;
 public class ListingController implements Initializable {
 	
 	// For scene changes
-	protected Main m = new Main();
+	private Main m = new Main();
 	
 	// For retrieving listings
-	protected ListingManager lm = new ListingManager();
+	private ListingManager lm = new ListingManager();
 	
 	@FXML
 	private Button sellVehicleButton;
@@ -91,10 +91,8 @@ public class ListingController implements Initializable {
 		username.setText(u.getFirstName() + " " + u.getLastName());
 		
 		// Update Table
-		//populate(retrieveData());
-		//table.setItems(data);
-		
-		lm.setup();
+		populate(retrieveData());
+		table.setItems(data);
 	}
 
 	
@@ -103,6 +101,8 @@ public class ListingController implements Initializable {
 	 * @return List<Listing>
 	 */
 	private List<Listing> retrieveData() {
+		lm.setup();
+		
 		// Return var
 		List<Listing> listings = null;
 		
