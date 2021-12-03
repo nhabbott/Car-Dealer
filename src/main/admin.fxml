@@ -103,8 +103,7 @@
                                     <TableColumn fx:id="firstNameColumn" prefWidth="89.0" text="First Name" />
                                     <TableColumn fx:id="lastNameColumn" prefWidth="120.0" text="Last Name" />
                                     <TableColumn fx:id="emailColumn" prefWidth="95.0" text="Email" />
-                                    <TableColumn fx:id="passwordColumn" prefWidth="90.0" text="Password" />
-                                    <TableColumn fx:id="isAdminColumn" prefWidth="75.0" text="Is Admin" />
+                                    <TableColumn fx:id="isAdminColumn" prefWidth="75.0" text="Administrator" />
                                  </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

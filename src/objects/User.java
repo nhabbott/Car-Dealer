@@ -2,6 +2,7 @@ package objects;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +13,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
+
+import org.hibernate.annotations.UpdateTimestamp;
 
 import auth.Authentication;
 
@@ -51,6 +56,11 @@ public class User {
 	@OneToOne(cascade=CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private Wishlist wishlist;
+	
+	@UpdateTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "lastUpdated", unique=false, nullable=true)
+	private Date updated;
 	
 	public User() {}
 
@@ -162,5 +172,9 @@ public class User {
 	
 	public String getSalt() {
 		return salt;
+	}
+	
+	public Date getLastUpdated() {
+		return updated;
 	}
 }

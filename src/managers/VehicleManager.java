@@ -126,7 +126,7 @@ public class VehicleManager {
     	// Retrieve data from DB
     	try {
     		session.beginTransaction();
-    		vehicles = session.createQuery("FROM Vehicle").list();
+    		vehicles = (List<Vehicle>) session.createQuery("FROM Vehicle").list();
     		session.getTransaction().commit();
     	} catch (HibernateException e) {
     		session.getTransaction().rollback();
@@ -136,10 +136,6 @@ public class VehicleManager {
     	}
     	
     	return vehicles;
-    }
- 
-    public void update(long id) {
-        
     }
  
     /**

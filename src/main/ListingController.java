@@ -63,6 +63,8 @@ public class ListingController implements Initializable {
 	@FXML 
 	private TableColumn<ListingInfo, Integer> priceColumn;
 	@FXML
+	private TableColumn<ListingInfo, Button> purchaseColumn;
+	@FXML
 	private Tab myListingsTab;
 	@FXML
 	private TableView<ListingInfo> myTable;
@@ -78,7 +80,7 @@ public class ListingController implements Initializable {
 	private TableColumn<ListingInfo, Integer> myMileageColumn; 
 	@FXML 
 	private TableColumn<ListingInfo, Integer> myPriceColumn;
-		
+	
 	private ObservableList<ListingInfo> listingData = FXCollections.observableArrayList();
 	private ObservableList<ListingInfo> userListingData = FXCollections.observableArrayList();
 	
@@ -154,6 +156,7 @@ public class ListingController implements Initializable {
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
         mileageColumn.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        purchaseColumn.setCellValueFactory(new PropertyValueFactory<>("purchase"));
     }
 
     /**
@@ -205,7 +208,7 @@ public class ListingController implements Initializable {
 	}
 	
 	/**
-	 * Create talbe info from listings
+	 * Create table info from listings
 	 * @param List<Listing>
 	 */
 	private void populateUserListings(final List<Listing> listings) {

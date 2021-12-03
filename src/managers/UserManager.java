@@ -88,13 +88,35 @@ public class UserManager {
     	return id;
     }
     
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<User> getAll() throws DatabaseErrorException {
+    	// Open session
+    	Session session = sessionFactory.openSession();
+    	List<User> users = null;
+    	Query q;
+    	
+    	try {
+    		session.beginTransaction();
+    		
+    		q = session.createQuery("From User");
+    		users = (List<User>) q.getResultList();
+    		
+    		session.getTransaction().commit();
+    	} catch (HibernateException e) {
+    		session.getTransaction().commit();
+    		throw new DatabaseErrorException("", e);
+    	}
+    	
+    	return users;
+    }
+    
     /**
      * Get a user from the database by username
      * @param username
      * @return
      * @throws DatabaseErrorException
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
 	public User getByUsername(String username) throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
@@ -125,32 +147,20 @@ public class UserManager {
      * @return
      * @throws DatabaseErrorException
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({ "rawtypes" })
 	public User getByEmail(String email) throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
     	Query q;
     	User u = null;
-    	List<User> res;
     	
     	// Get user from DB
     	try {
     		session.beginTransaction();
     		
-    		q = session.createSQLQuery("FROM User WHERE email=:param1");
+    		q = session.createQuery("FROM User WHERE email=:param1");
 			q.setParameter("param1", email);
-    		res = q.getResultList();
-			
-    		// Check if correct user
-    		if ((res.size() == 1) && (res.get(0).getUserName() == email)) {
-    			u = res.get(0);
-    		} else {
-    			for (User us: res) {
-    				if (us.getUserName() == email) {
-    					u = us;
-    				}
-    			}
-    		}
+    		u = (User) q.uniqueResult();
     		
 			session.getTransaction().commit();
     	} catch (HibernateException e) {
@@ -186,7 +196,7 @@ public class UserManager {
     	try {
     		dbSession.beginTransaction();
     		
-    		q = dbSession.createSQLQuery("INSERT INTO User (resetToken) VALUES (:param1) WHERE email=:param2");
+    		q = dbSession.createQuery("UPDATE User SET resetToken=:param1 WHERE email=:param2");
 			q.setParameter("param1", resetToken);
 			q.setParameter("param2", em);
 			q.executeUpdate();
@@ -211,7 +221,6 @@ public class UserManager {
     	// Get required info
     	String to = em;
     	String from = "support@cardealersoftware.com";
-    	String text = String.format("Hi, \n We have received your password reset request and your code is %s. If you did not make this request, please disregard this email", resetToken);
     	
     	// Set properties
     	props.put("mail.smtp.auth", true);
@@ -233,7 +242,7 @@ public class UserManager {
     		message.setFrom(new InternetAddress(from));
     		message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
     		message.setSubject("Password Reset Request");
-    		message.setText(text);
+    		message.setContent("Hi,<br><br>We have received your password reset request and your code is <b>" + resetToken + "</b>. This code is only good for until 12AM CST. If you did not make this request, please disregard this email.<br><br>Thanks,<br>The Car Dealer Team", "text/html");
     		
     		// Send message
     		Transport.send(message);
@@ -246,6 +255,35 @@ public class UserManager {
     	}
     }
     
+    @SuppressWarnings("rawtypes")
+	public boolean checkResetToken(String resetToken) throws DatabaseErrorException {
+    	// Open session
+    	Session session = sessionFactory.openSession();
+    	Query check;
+    	User u = null;
+    	
+    	try {
+    		session.beginTransaction();
+    		
+    		// Compare resetTokens
+    		check = session.createQuery("From User WHERE resetToken=:param1");
+    		check.setParameter("param1", resetToken);
+    		u = (User) check.getSingleResult();
+    		
+    		session.getTransaction().commit();
+    	} catch (HibernateException e) {
+    		session.getTransaction().rollback();
+    		throw new DatabaseErrorException("Token doesn't match", e);
+    	}
+    	
+    	// Return
+		if (u == null) {
+			return false;
+		} else {
+			return true;
+		}
+    }
+    
     /**
      * Resets the user's password
      * @param resetToken - The resetToken generated in forgotPasswordEmail()
@@ -253,11 +291,10 @@ public class UserManager {
      * @throws DatabaseErrorException
      */
     @SuppressWarnings("rawtypes")
-	public void resetPassword(String resetToken, String newPassword) throws DatabaseErrorException {
+	public boolean resetPassword(String resetToken, String newPassword) throws DatabaseErrorException {
     	// Open session
-    	Session session  = sessionFactory.openSession();
-    	Query update;
-    	Query remove;
+    	Session session = sessionFactory.openSession();
+    	Query update, remove;
     	
     	// Create new password
     	String finalHash = null;
@@ -274,14 +311,14 @@ public class UserManager {
     		session.beginTransaction();
     		
     		// Set new password
-    		update = session.createSQLQuery("UPDATE User SET (password, salt) VALUES (:param1, :param2) WHERE resetToken=:param3");
-    		update.setParameter("param1", Authentication.convertToString(bSalt));
-    		update.setParameter("param2", finalHash);
+    		update = session.createQuery("UPDATE User SET password=:param1, salt=:param2 WHERE resetToken=:param3");
+    		update.setParameter("param1", finalHash);
+    		update.setParameter("param2", Authentication.convertToString(bSalt));
     		update.setParameter("param3", resetToken);
     		update.executeUpdate();
     		
     		// Remove resetToken
-    		remove = session.createSQLQuery("UPDATE User SET (resetToken) VALUES (:param1) WHERE resetToken=:param2");
+    		remove = session.createQuery("UPDATE User SET resetToken=:param1 WHERE resetToken=:param2");
     		remove.setParameter("param1", "");
     		remove.setParameter("param2", resetToken);
     		remove.executeUpdate();
@@ -293,6 +330,8 @@ public class UserManager {
     	} finally {
     		session.close();
     	}
+    	
+    	return true;
     }
     
     /**

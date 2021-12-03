@@ -1,11 +1,10 @@
 package main;
 
-import static cache.Caching.cache;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import exceptions.DatabaseErrorException;
 import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,10 +17,15 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import objects.User;
 
+import managers.UserManager;
+
 public class ForgotPasswordController implements Initializable{
 
 	// For scene changes
 	private Main m = new Main();
+	
+	// For password reset
+	UserManager um = new UserManager();
 	
 	@FXML
 	private VBox step1VBox;
@@ -50,9 +54,11 @@ public class ForgotPasswordController implements Initializable{
 	FadeTransition fadeOut = new FadeTransition();
 	FadeTransition fadeIn = new FadeTransition();
 	
-	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		// Init UserManager
+		um.setup();
+		
 		// Hide other information
 		step2VBox.setVisible(false);
 		step3VBox.setVisible(false);
@@ -80,42 +86,90 @@ public class ForgotPasswordController implements Initializable{
 	
 	public void sendRecoveryEmail(ActionEvent e) {
 		String email = emailField.getText();
+		User u = null;
+		boolean worked = false;
 		
-		// Send recovery code to email
-		//TODO
+		try {
+			// Get user
+			u = (User) um.getByEmail(email);
+			
+			// Check if user exists
+			if (u == null) {
+				return;
+			}
+			
+			// Send email
+			worked = um.forgotPassowrdEmail(u.getEmail());
+		} catch (DatabaseErrorException e1) {
+			e1.printStackTrace();
+			messageLabel.setText("There was an error sending your reset email.");
+		}
 		
-		messageLabel.setText("Email has been sent with a recovery code.");
-		
-		// Update GUI
-		fadeOut.play();
-		step2VBox.setVisible(true);
-		fadeIn.play();
+		if (worked) {
+			messageLabel.setText("If a user with this email exists, a recovery code has been sent.");
+			
+			// Update GUI
+			fadeOut.play();
+			step2VBox.setVisible(true);
+			fadeIn.play();
+		} else {
+			messageLabel.setText("There was an error sending your reset email.");
+		}
 	}
 	
 	public void checkCode(ActionEvent e) {
 		String code = recoveryCodeField.getText();
+		boolean same = false;
 		
-		// check code to make sure it is correct
-		//TODO
+		try {
+			same = um.checkResetToken(code);
+		} catch (DatabaseErrorException e1) {
+			e1.printStackTrace();
+		}
 		
-		messageLabel.setText("Code accepted: Please enter new password.");
-		
-		// Update GUI
-		fadeOut.setNode(step2VBox);
-		fadeIn.setNode(step3VBox);
-		fadeOut.play();
-		step3VBox.setVisible(true);
-		fadeIn.play();
+		if (same) {
+			messageLabel.setText("Code accepted: Please enter new password.");
+			
+			// Update GUI
+			fadeOut.setNode(step2VBox);
+			fadeIn.setNode(step3VBox);
+			fadeOut.play();
+			step3VBox.setVisible(true);
+			fadeIn.play();
+		} else {
+			messageLabel.setText("Code does not match");
+		}
 	}
 	
-	public void setNewPassword(ActionEvent e) {
+	public void setNewPassword(ActionEvent e) throws IOException {
 		String password = newPasswordField.getText();
+		String code = recoveryCodeField.getText();
+		boolean worked = false;
 		
-		// Update password in database
-		//TODO
+		try {
+			worked = um.resetPassword(code, password);
+		} catch (DatabaseErrorException e1) {
+			e1.printStackTrace();
+		}
 		
-		messageLabel.setText("Password Updated. Press back to return to login screen.");
-		newPasswordField.clear();
+		if (worked) {
+			messageLabel.setText("Password Updated. Press back to return to login screen.");
+			newPasswordField.clear();
+			
+			// Wait for user to read message
+			try {
+				java.util.concurrent.TimeUnit.SECONDS.sleep(4);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			} finally {
+				um.exit();
+			}
+			
+			// Switch scene
+			m.changeScene("login.fxml");
+		} else {
+			messageLabel.setText("There was an error, please try again later.");
+		}
 		
 	}
 }

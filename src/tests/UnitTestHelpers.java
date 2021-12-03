@@ -43,7 +43,8 @@ protected SessionFactory sessionFactory;
      * 
      * @throws DatabaseErrorException 
      */
-    public void cleanUpUserTests() throws DatabaseErrorException {
+    @SuppressWarnings("rawtypes")
+	public void cleanUpUserTests() throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
     	
@@ -68,7 +69,8 @@ protected SessionFactory sessionFactory;
     	}
     }
     
-    public void cleanUpVehicleTests() throws DatabaseErrorException {
+    @SuppressWarnings("rawtypes")
+	public void cleanUpVehicleTests() throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
     	
@@ -93,7 +95,8 @@ protected SessionFactory sessionFactory;
     	}
     }
     
-    public void cleanUpListingTests() throws DatabaseErrorException {
+    @SuppressWarnings("rawtypes")
+	public void cleanUpListingTests() throws DatabaseErrorException {
     	// Open session
     	Session session = sessionFactory.openSession();
     	

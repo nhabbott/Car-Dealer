@@ -2,7 +2,9 @@ package main;
 
 import main.model.PreviousSale;
 import main.model.Request;
+import main.model.UserInfo;
 import managers.ListingManager;
+import managers.UserManager;
 import objects.Listing;
 import objects.RequestButton;
 import objects.User;
@@ -14,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Callback;
 
 import static cache.Caching.cache;
 
@@ -32,7 +33,8 @@ public class AdminController implements Initializable {
 	private Main m = new Main();
 	
 	// For DB
-	protected ListingManager lm = new ListingManager();
+	private ListingManager lm = new ListingManager();
+	private UserManager um = new UserManager();
 	
     @FXML
     private TableView<Request> requestTableView;
@@ -71,7 +73,7 @@ public class AdminController implements Initializable {
     @FXML
     private TableColumn<PreviousSale, String> yearTableColumnS;
     @FXML
-    private TableView<User> userListTable;
+    private TableView<UserInfo> userListTable;
     @FXML
     private TableColumn<User, String> usernameColumn;
     @FXML
@@ -80,8 +82,6 @@ public class AdminController implements Initializable {
     private TableColumn<User, String> lastNameColumn;
     @FXML
     private TableColumn<User, String> emailColumn;
-    @FXML
-    private TableColumn<User, String> passwordColumn;
     @FXML
     private TableColumn<User, String> isAdminColumn;
     @FXML
@@ -101,6 +101,7 @@ public class AdminController implements Initializable {
     
     private ObservableList<Request> requestData = FXCollections.observableArrayList();
     private ObservableList<PreviousSale> soldData = FXCollections.observableArrayList();
+    private ObservableList<UserInfo> userData = FXCollections.observableArrayList();
 
     /**
      * 
@@ -113,8 +114,9 @@ public class AdminController implements Initializable {
     	// Set user label
     	adminNameLabel.setText(u.getFirstName() + " " + u.getLastName());
     	
-    	// Init ListingManager
+    	// Init ListingManager & UserManager
     	lm.setup();
+    	um.setup();
     	
     	// Fill table
     	initTable();
@@ -141,8 +143,17 @@ public class AdminController implements Initializable {
     	
     	sellsTableView.setItems(soldData);
     	
+    	// Setup users table
+    	initColumnsU();
+    	if (!cache.contains("users")) {
+    		loadDataU();
+    	}
+    	
+    	userListTable.setItems(userData);
+    	
     	// Close ListingManager
     	lm.exit();
+    	um.exit();
     }
 
     /**
@@ -162,8 +173,6 @@ public class AdminController implements Initializable {
 
         // Buttons
         addTableButtons();
-        
-        //editableCols();
     }
 
     /**
@@ -178,65 +187,26 @@ public class AdminController implements Initializable {
         yearTableColumnS.setCellValueFactory(new PropertyValueFactory<>("year"));
         mileageTableColumnS.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         priceTableColumnS.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        //editableCols();
+    }
+    
+    /**
+     * Initializes the users column headers
+     */
+    private void initColumnsU() {
+        //name, vin, make, model, year, mileage, price;
+    	usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
+        isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("isAdmin"));
     }
 
     private void addTableButtons() {
     	
     }
     
-    /*private void editableCols() {
-
-        nameTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        nameTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setName(e.getNewValue());
-        });
-
-        vinTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        vinTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setVin(e.getNewValue());
-        });
-
-        makeTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        makeTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setMake(e.getNewValue());
-        });
-
-        modelTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        modelTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setModel(e.getNewValue());
-        });
-
-        yearTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        yearTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setYear(e.getNewValue());
-        });
-
-        mileageTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        mileageTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setMileage(e.getNewValue());
-        });
-
-        priceTableColumnR.setCellFactory(TextFieldTableCell.forTableColumn());
-
-        priceTableColumnR.setOnEditCommit(e-> {
-            e.getTableView().getItems().get(e.getTablePosition().getRow()).setPrice(e.getNewValue());
-        });
-
-        requestTableView.setEditable(true);
-        sellsTableView.setEditable(true);
-    }*/
-    
-    
     public void refresh(ActionEvent e) {
-    	// Update admin request views.
+    	requestTableView.refresh();
     }
     
     
@@ -337,6 +307,23 @@ public class AdminController implements Initializable {
  		}
      }
     
+     private void loadDataU() {
+    	 List<User> users = null;
+    	 
+    	 try {
+    		 users = um.getAll();
+    	 } catch (DatabaseErrorException e) {
+    		 e.printStackTrace();
+    	 }
+    	 
+    	 if (users != null) {
+    		 users.forEach((p) -> {
+    			 UserInfo u = new UserInfo(p);
+    			 userData.add(u);
+    		 });
+    	 }
+     }
+     
 	/**
 	 * EventHandler for the Listing accept buttons
 	 * @see RequestButton

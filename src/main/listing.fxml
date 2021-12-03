@@ -73,6 +73,7 @@
                                     <TableColumn fx:id="yearColumn" editable="false" prefWidth="75.0" text="Year" />
                                     <TableColumn fx:id="mileageColumn" editable="false" prefWidth="75.0" text="Mileage" />
                                     <TableColumn fx:id="priceColumn" editable="false" prefWidth="75.0" text="Price" />
+                                    <TableColumn fx:id="purchaseColumn" editable="false" prefWidth="75.0" text="Purchase" />
                                 </columns>
                                  <columnResizePolicy>
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -1,17 +1,16 @@
 Backend  
  - Finish JUnit Tests
  - Move DB operations to tasks
- - Purchase View
- - Password Reset
  - Generate reports for current listings
  - Cache listings in ListingController
  - Admin View
    - Make admin screen
      - Implement user search
      - Add button for makeAdmin to table for each user
-   - Implement refresh button for requests
  
 
 Frontend
  - Listing View
    - Add filtering functionality
+   - Add purchase button in TableView
+   - Remove purchase buttom from bottom
