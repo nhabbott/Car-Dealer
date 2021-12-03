@@ -32,6 +32,9 @@ public class Listing {
 	@Column(name="userId", unique=false, nullable=false)
 	private long userId;
 	
+	@Column(name="soldToId", unique=false, nullable=true)
+	private Long soldToId;
+	
 	@OneToOne(cascade=CascadeType.ALL)
 	@PrimaryKeyJoinColumn
 	private Vehicle vehicle;
@@ -107,6 +110,10 @@ public class Listing {
 	 */
 	public long getUserId() {
 		return userId;
+	}
+	
+	public Long getSoldToId() {
+		return soldToId;
 	}
 	
 	/**

@@ -14,6 +14,7 @@ public class PreviousSale {
 	private final long id;
 	
 	private final SimpleStringProperty name;
+	private final SimpleStringProperty soldTo;
 	private final SimpleStringProperty vin;
 	private final SimpleStringProperty make;
 	private final SimpleStringProperty model;
@@ -28,10 +29,12 @@ public class PreviousSale {
 	public PreviousSale(Listing l) {
 		// Get user info
 		User u = null;
+		User s = null;
 		um.setup();
 		
 		try {
 			u = (User) um.get(l.getUserId());
+			s = (User) um.get(l.getSoldToId());
 		} catch (DatabaseErrorException e) {
 			e.printStackTrace();
 		} finally {
@@ -40,7 +43,13 @@ public class PreviousSale {
 		
 		this.id = l.getId();
 		
-		this.name = new SimpleStringProperty(u.getUserName());
+		if (s == null) {
+			this.soldTo = new SimpleStringProperty("Declined");
+		} else {
+			this.soldTo = new SimpleStringProperty(s.getLastName() + ", " + s.getFirstName());
+		}
+		
+		this.name = new SimpleStringProperty(u.getLastName() + ", " + u.getFirstName());
 		this.vin = new SimpleStringProperty(l.getVehicle().getVin());
 		this.make = new SimpleStringProperty(l.getVehicle().getMake());
 		this.model = new SimpleStringProperty(l.getVehicle().getModel());
@@ -63,6 +72,10 @@ public class PreviousSale {
 	 */
 	public String getName() {
 		return name.get();
+	}
+	
+	public String getSoldTo() {
+		return soldTo.get();
 	}
 	
 	/**

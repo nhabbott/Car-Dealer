@@ -14,6 +14,7 @@ public class ListingInfo {
 	private final SimpleIntegerProperty year;
 	private final SimpleIntegerProperty mileage;
 	private final SimpleFloatProperty price;
+	private final long id;
 	
 	/**
 	 * Class constructor specifying the listing
@@ -29,7 +30,7 @@ public class ListingInfo {
 		this.year = new SimpleIntegerProperty(v.getYear());
 		this.mileage = new SimpleIntegerProperty(v.getMileage());
 		this.price = new SimpleFloatProperty(l.getPrice());
-		
+		this.id = l.getId();
 	}
 	
 	/**
@@ -80,6 +81,12 @@ public class ListingInfo {
 		return price.get();
 	}
 	
-	
+	/**
+	 * Gets the id of the listing
+	 * @return long
+	 */
+	public long getId() {
+		return id;
+	}
 }
 

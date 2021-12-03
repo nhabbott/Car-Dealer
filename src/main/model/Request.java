@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import managers.UserManager;
 import objects.Listing;
-import objects.RequestButton;
 import objects.User;
 
 public class Request {
@@ -21,9 +20,6 @@ public class Request {
 	private final SimpleIntegerProperty year;
 	private final SimpleIntegerProperty mileage;
 	private final SimpleFloatProperty price;
-	
-	private RequestButton accept;
-    private RequestButton decline;
 	
     /**
      * Class constructor specifying the listing
@@ -42,12 +38,6 @@ public class Request {
 		} finally {
 			um.exit();
 		}
-		
-		// Setup buttons
-		this.accept = new RequestButton(this);
-		this.decline = new RequestButton(this);
-		accept.setText("Approve");
-		decline.setText("Deny");
 		
 		this.id = l.getId();
 		
@@ -122,23 +112,5 @@ public class Request {
 	 */
 	public float getPrice() {
 		return price.get();
-	}
-	
-	/**
-	 * Sets the accept button for the listing
-	 * @param RequestButton
-	 * @see RequestButton
-	 */
-	public void setAcceptButton(RequestButton a) {
-		this.accept = a;
-	}
-	
-	/**
-	 * Sets the accept button for the listing
-	 * @param RequestButton
-	 * @see RequestButton
-	 */
-	public void setDeclineButton(RequestButton d) {
-		this.decline = d;
 	}
 }

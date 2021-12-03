@@ -57,11 +57,6 @@ public class User {
 	@PrimaryKeyJoinColumn
 	private Wishlist wishlist;
 	
-	@UpdateTimestamp
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "lastUpdated", unique=false, nullable=true)
-	private Date updated;
-	
 	public User() {}
 
 	public User(String firstName, String lastName, boolean isAdmin, String userName, String password, String email) {
@@ -172,9 +167,5 @@ public class User {
 	
 	public String getSalt() {
 		return salt;
-	}
-	
-	public Date getLastUpdated() {
-		return updated;
 	}
 }

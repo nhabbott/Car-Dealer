@@ -48,7 +48,7 @@
                            <children>
                               <TableView fx:id="requestTableView" editable="true" layoutY="39.0" prefHeight="463.0" prefWidth="800.0" style="-fx-background-color: grey;">
                                 <columns>
-                                  <TableColumn fx:id="nameTableColumnR" prefWidth="116.0" text="Name" />
+                                    <TableColumn fx:id="nameTableColumnR" prefWidth="116.0" text="Listed By" />
                                     <TableColumn fx:id="vinTableColumnR" prefWidth="75.0" text="VIN" />
                                     <TableColumn fx:id="makeTableColumnR" prefWidth="79.0" text="Make" />
                                     <TableColumn fx:id="modelTableColumnR" prefWidth="93.0" text="Model" />
@@ -77,7 +77,8 @@
                            <children>
                               <TableView fx:id="sellsTableView" editable="true" prefHeight="503.0" prefWidth="800.0" style="-fx-background-color: grey;">
                                  <columns>
-                                    <TableColumn fx:id="nameTableColumnS" prefWidth="111.0" text="Name" />
+                                    <TableColumn fx:id="nameTableColumnS" prefWidth="111.0" text="Listed By" />
+                                    <TableColumn fx:id="soldToTableColumnS" prefWidth="111.0" text="Sold To" />
                                     <TableColumn fx:id="vinTableColumnS" prefWidth="89.0" text="VIN" />
                                     <TableColumn fx:id="makeTableColumnS" prefWidth="120.0" text="Make" />
                                     <TableColumn fx:id="modelTableColumnS" prefWidth="95.0" text="Model" />

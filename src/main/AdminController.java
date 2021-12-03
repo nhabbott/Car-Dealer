@@ -1,5 +1,6 @@
 package main;
 
+import main.model.ListingInfo;
 import main.model.PreviousSale;
 import main.model.Request;
 import main.model.UserInfo;
@@ -16,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import static cache.Caching.cache;
 
@@ -41,9 +43,9 @@ public class AdminController implements Initializable {
     @FXML
     private TableView<PreviousSale> sellsTableView;
     @FXML
-    private TableColumn<Request, Button> acceptTableColumnR;
+    private TableColumn<Request, String> acceptTableColumnR;
     @FXML
-    private TableColumn<Request, Button> declineTableColumnR;
+    private TableColumn<Request, String> declineTableColumnR;
     @FXML
     private TableColumn<Request, String> makeTableColumnR;
     @FXML
@@ -60,6 +62,8 @@ public class AdminController implements Initializable {
     private TableColumn<Request, String> nameTableColumnR;
     @FXML
     private TableColumn<PreviousSale, String> nameTableColumnS;
+    @FXML
+    private TableColumn<PreviousSale, String> soldToTableColumnS;
     @FXML
     private TableColumn<Request, String> priceTableColumnR;
     @FXML
@@ -133,6 +137,8 @@ public class AdminController implements Initializable {
     		loadDataR();
     	}
     	
+    	acceptTableColumnR.setCellFactory(acceptBtnCellFactory);
+    	declineTableColumnR.setCellFactory(declineBtnCellFactory);
     	requestTableView.setItems(requestData);
     	
     	// Setup sold table
@@ -168,11 +174,8 @@ public class AdminController implements Initializable {
         yearTableColumnR.setCellValueFactory(new PropertyValueFactory<>("year"));
         mileageTableColumnR.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         priceTableColumnR.setCellValueFactory(new PropertyValueFactory<>("price"));
-        acceptTableColumnR.setCellValueFactory(new PropertyValueFactory<>("accept"));
-        declineTableColumnR.setCellValueFactory(new PropertyValueFactory<>("decline"));
-
-        // Buttons
-        addTableButtons();
+        acceptTableColumnR.setCellValueFactory(new PropertyValueFactory<>(""));
+        declineTableColumnR.setCellValueFactory(new PropertyValueFactory<>(""));
     }
 
     /**
@@ -181,6 +184,7 @@ public class AdminController implements Initializable {
     private void initColumnsS() {
         //name, vin, make, model, year, mileage, price;
         nameTableColumnS.setCellValueFactory(new PropertyValueFactory<>("name"));
+        soldToTableColumnS.setCellValueFactory(new PropertyValueFactory<>("soldTo"));
         vinTableColumnS.setCellValueFactory(new PropertyValueFactory<>("vin"));
         makeTableColumnS.setCellValueFactory(new PropertyValueFactory<>("make"));
         modelTableColumnS.setCellValueFactory(new PropertyValueFactory<>("model"));
@@ -201,9 +205,134 @@ public class AdminController implements Initializable {
         isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("isAdmin"));
     }
 
-    private void addTableButtons() {
-    	
-    }
+    /**
+     * Callback for accept button
+     */
+    @SuppressWarnings("rawtypes")
+    Callback<TableColumn<Request, String>, TableCell<Request, String>> acceptBtnCellFactory = new Callback<TableColumn<Request, String>, TableCell<Request, String>>() {
+		@Override
+		public TableCell call(TableColumn<Request, String> p) {
+			final TableCell<Request, String> cell = new TableCell<Request, String>() {
+
+                final Button btn = new Button("Accept");
+
+                @SuppressWarnings("unchecked")
+				@Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        btn.setOnAction(event -> {
+                        	// Init ListingManager
+                			lm.setup();
+                			
+                			// Get needed info
+                			Request b = (Request) getTableView().getItems().get(getIndex());
+                			long listingId = (long) b.getId();
+                			
+                			// Publish listing
+                			try {
+                				lm.setPublished(listingId, true);
+                			} catch (DatabaseErrorException e1) {
+                				e1.printStackTrace();
+                			}
+                			
+                			// Fix the cache
+                			if (cache.contains("requests")) {
+                				List<Listing> l = (List<Listing>) cache.get("requests");
+                				l.forEach(p -> {
+                					if (p.getId() == listingId) {
+                						l.remove(p);
+                					}
+                				});
+                				
+                				cache.remove("requests");
+                				cache.add("requests", l, TimeUnit.MINUTES.toMillis(30));
+                			}
+                			
+                			// Remove from table
+                			requestTableView.getItems().remove(getIndex());
+                			
+                			// Update sold table
+                			loadDataS();
+                			sellsTableView.setItems(soldData);
+                			sellsTableView.refresh();
+                        });
+                        setGraphic(btn);
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+		}
+    };
+    
+    /**
+     * Callback for decline button
+     */
+    @SuppressWarnings("rawtypes")
+    Callback<TableColumn<Request, String>, TableCell<Request, String>> declineBtnCellFactory = new Callback<TableColumn<Request, String>, TableCell<Request, String>>() {
+		@Override
+		public TableCell call(TableColumn<Request, String> p) {
+			final TableCell<Request, String> cell = new TableCell<Request, String>() {
+
+                final Button btn = new Button("Decline");
+
+                @SuppressWarnings("unchecked")
+				@Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        btn.setOnAction(event -> {
+                			// Init ListingManager
+                			lm.setup();
+                			
+                			// Get needed info
+                			Request b = (Request) getTableView().getItems().get(getIndex());
+                			long listingId = (long) b.getId();
+                			
+                			// Un-publish listing
+                			try {
+                				lm.setPublished(listingId, false);
+                				lm.setSold(listingId);
+                			} catch (DatabaseErrorException e1) {
+                				e1.printStackTrace();
+                			}
+                			
+                			// Fix the cache
+                			if (cache.contains("requests")) {
+                				List<Listing> l = (List<Listing>) cache.get("requests");
+                				l.forEach(p -> {
+                					if (p.getId() == listingId) {
+                						l.remove(p);
+                					}
+                				});
+                				
+                				cache.remove("requests");
+                				cache.add("requests", l, TimeUnit.MINUTES.toMillis(30));
+                			}
+                			
+                			// Remove from table
+                			sellsTableView.getItems().remove(getIndex());
+                			
+                			// Update requests table
+                			loadDataR();
+                			requestTableView.setItems(requestData);
+                			requestTableView.refresh();
+                        });
+                        setGraphic(btn);
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+		}
+    };
     
     public void refresh(ActionEvent e) {
     	requestTableView.refresh();
@@ -224,6 +353,7 @@ public class AdminController implements Initializable {
 	 * @throws IOException
 	 */
 	public void goToListings(ActionEvent e) throws IOException {
+		lm.exit();
 		m.changeScene("listing.fxml");
 	}
     
@@ -241,6 +371,7 @@ public class AdminController implements Initializable {
      * @throws IOException
      */
     public void exitButtonOnAction(ActionEvent event) throws IOException {
+    	lm.exit();
 		m.changeScene("login.fxml");
     }
 
@@ -264,18 +395,7 @@ public class AdminController implements Initializable {
 		if (listings != null) {
 			listings.forEach((p) -> {
 				// Add request
-				Request r = new Request(p);
-				
-				// Setup buttons
-				RequestButton a = new RequestButton(r);
-				RequestButton d = new RequestButton(r);
-				
-				a.setText("Accept");
-				d.setText("Deny");
-				
-				r.setAcceptButton(a);
-				r.setDeclineButton(d);
-				
+				Request r = new Request(p);			
 				requestData.add(r);
 			});
 		}
@@ -307,6 +427,9 @@ public class AdminController implements Initializable {
  		}
      }
     
+     /**
+      * Retrieves all users from the database
+      */
      private void loadDataU() {
     	 List<User> users = null;
     	 
@@ -323,102 +446,4 @@ public class AdminController implements Initializable {
     		 });
     	 }
      }
-     
-	/**
-	 * EventHandler for the Listing accept buttons
-	 * @see RequestButton
-	 */
-	EventHandler<ActionEvent> acceptButtonHandler = new EventHandler<ActionEvent>() {
-		@SuppressWarnings("unchecked")
-		@Override
-		public void handle(ActionEvent e) {
-			// Init ListingManager
-			lm.setup();
-			
-			// Get needed info
-			RequestButton b = (RequestButton) e.getSource();
-			long listingId = (long) b.getRequest().getId();
-			
-			// Publish listing
-			try {
-				lm.setPublished(listingId, true);
-			} catch (DatabaseErrorException e1) {
-				e1.printStackTrace();
-			} finally {
-				lm.exit();
-			}
-			
-			// Fix the cache
-			if (cache.contains("requests")) {
-				List<Listing> l = (List<Listing>) cache.get("requests");
-				l.forEach(p -> {
-					if (p.getId() == listingId) {
-						l.remove(p);
-					}
-				});
-				
-				cache.remove("requests");
-				cache.add("requests", l, TimeUnit.MINUTES.toMillis(30));
-			}
-			
-			// Remove from table
-			//requestTableView.
-			
-			// Update sold table
-			//loadDataS();
-			//sellsTableView.setItems(soldData);
-			
-			// End event
-			e.consume();
-		}
-	};
-	
-	/**
-	 * EventHandler for the Listing decline buttons
-	 * @see RequestButton
-	 */
-	EventHandler<ActionEvent> declineButtonHandler = new EventHandler<ActionEvent>() {
-		@SuppressWarnings("unchecked")
-		@Override
-		public void handle(ActionEvent e) {
-			// Init ListingManager
-			lm.setup();
-			
-			// Get needed info
-			RequestButton b = (RequestButton) e.getSource();
-			long listingId = (long) b.getRequest().getId();
-			
-			// Un-publish listing
-			try {
-				lm.setPublished(listingId, false);
-			} catch (DatabaseErrorException e1) {
-				e1.printStackTrace();
-			} finally {
-				lm.exit();
-			}
-			
-			// Fix the cache
-			if (cache.contains("requests")) {
-				List<Listing> l = (List<Listing>) cache.get("requests");
-				l.forEach(p -> {
-					if (p.getId() == listingId) {
-						l.remove(p);
-					}
-				});
-				
-				cache.remove("requests");
-				cache.add("requests", l, TimeUnit.MINUTES.toMillis(30));
-			}
-			
-			// Remove from table
-			//sellsTableView.
-			
-			// Update requests table
-			//loadDataR();
-			//requestTableView.setItems(requestData);
-			
-			// End event
-			e.consume();
-		}
-	};
 }
