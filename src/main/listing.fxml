@@ -109,11 +109,4 @@
          </children>
       </AnchorPane>
    </center>
-   <bottom>
-      <Button fx:id="purchaseButton" mnemonicParsing="false" onAction="#goToPurchase" prefHeight="61.0" prefWidth="800.0" style="-fx-background-color: #8900f7;" text="Purchase" textFill="WHITE" BorderPane.alignment="CENTER">
-         <font>
-            <Font name="System Bold" size="26.0" />
-         </font>
-      </Button>
-   </bottom>
 </BorderPane>

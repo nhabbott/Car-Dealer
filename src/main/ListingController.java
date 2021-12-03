@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import exceptions.DatabaseErrorException;
 
@@ -17,10 +18,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 import main.model.ListingInfo;
+import main.model.PreviousSale;
 import managers.ListingManager;
 import objects.Listing;
 import objects.User;
@@ -42,8 +46,6 @@ public class ListingController implements Initializable {
 	private Button toAdminButton;
 	@FXML
 	private Button logoutButton;
-	@FXML
-	private Button purchaseButton;
 	@FXML 
 	private Label username; 
 	@FXML
@@ -63,7 +65,7 @@ public class ListingController implements Initializable {
 	@FXML 
 	private TableColumn<ListingInfo, Integer> priceColumn;
 	@FXML
-	private TableColumn<ListingInfo, Button> purchaseColumn;
+	private TableColumn<ListingInfo, String> purchaseColumn;
 	@FXML
 	private Tab myListingsTab;
 	@FXML
@@ -121,6 +123,7 @@ public class ListingController implements Initializable {
 		m.changeScene("login.fxml");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// Check admin button
@@ -135,14 +138,37 @@ public class ListingController implements Initializable {
 		
 		// Init table columns
 		initColumnsL();
-		initColumnsLU();
+		if (!cache.contains("listings")) {
+			// Update listing table
+			retrieveListingData();
+		} else {
+    		List<Listing> listings = (List<Listing>) cache.get("listings");
+    		
+			listings.forEach((p) -> {
+				// Add request
+				ListingInfo r = new ListingInfo(p);			
+				listingData.add(r);
+			});
+		}
 		
-		// Update listing table
-		populateListings(retrieveListingData());
+		// Setup purchase button
+		purchaseColumn.setCellFactory(purchaseBtnCellFactory);
 		table.setItems(listingData);
 		
-		// Update user's listing table
-		populateUserListings(retrieveUserListingData());
+		initColumnsLU();
+		if (!cache.contains("userListings")) {
+			// Update user's listing table
+			retrieveUserListingData();
+		} else {
+    		List<Listing> listings = (List<Listing>) cache.get("userListings");
+    		
+			listings.forEach((p) -> {
+				// Add request
+				ListingInfo r = new ListingInfo(p);			
+				listingData.add(r);
+			});
+		}
+		
 		myTable.setItems(userListingData);
 	}
 
@@ -156,7 +182,7 @@ public class ListingController implements Initializable {
         yearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
         mileageColumn.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        purchaseColumn.setCellValueFactory(new PropertyValueFactory<>("purchase"));
+        purchaseColumn.setCellValueFactory(new PropertyValueFactory<>(""));
     }
 
     /**
@@ -170,57 +196,110 @@ public class ListingController implements Initializable {
         myMileageColumn.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         myPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
+    
+    /**
+     * Callback for purchase button
+     */
+    @SuppressWarnings("rawtypes")
+    Callback<TableColumn<ListingInfo, String>, TableCell<ListingInfo, String>> purchaseBtnCellFactory = new Callback<TableColumn<ListingInfo, String>, TableCell<ListingInfo, String>>() {
+		@Override
+		public TableCell call(TableColumn<ListingInfo, String> p) {
+			final TableCell<ListingInfo, String> cell = new TableCell<ListingInfo, String>() {
+
+                final Button btn = new Button("Purchase");
+
+                @SuppressWarnings("unchecked")
+				@Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        btn.setOnAction(event -> {
+                        	// Init ListingManager
+                			lm.setup();
+                			
+                			// Get needed info
+                			ListingInfo b = (ListingInfo) getTableView().getItems().get(getIndex());
+                			long listingId = (long) b.getId();
+                			
+                			// Purchase
+                			try {
+                				lm.setSold(listingId, u.getId());
+                			} catch (DatabaseErrorException e1) {
+                				e1.printStackTrace();
+                			}
+                			
+                			// Fix the cache
+                			if (cache.contains("listings")) {
+                				List<Listing> l = (List<Listing>) cache.get("listings");
+                				l.forEach(p -> {
+                					if (p.getId() == listingId) {
+                						l.remove(p);
+                					}
+                				});
+                				
+                				cache.remove("listings");
+                				cache.add("listings", l, TimeUnit.MINUTES.toMillis(30));
+                			}
+                			
+                			// Remove from table
+                			table.getItems().remove(getIndex());
+                        });
+                        setGraphic(btn);
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+		}
+    };
 	
 	/**
 	 * Get listing info from DB
-	 * @return List<Listing>
 	 */
-	private List<Listing> retrieveListingData() {
+	private void retrieveListingData() {
 		lm.setup();
 		
 		// Return var
 		List<Listing> listings = null;
 		
 		try {
+			// Get all listings
 			listings = lm.getAll();
+			
+			// Cache all listings to memory for 30 min
+			cache.add("listings", listings, TimeUnit.MINUTES.toMillis(30));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return listings;
+		if (listings != null) {
+			listings.forEach(p -> listingData.add(new ListingInfo(p)));
+		}
 	}
 	
 	/**
 	 * Get user's active listings from DB
-	 * @return List<Listing>
 	 */
-	private List<Listing> retrieveUserListingData() {
+	private void retrieveUserListingData() {
 		// Return var
 		List<Listing> listings = null;
 		
 		try {
+			// Get a user's listings
 			listings = lm.getUsersListings(u.getId());
+			
+			// Cache all user's listings
+			cache.add("userListings", listings, TimeUnit.MINUTES.toMillis(30));
 		} catch (DatabaseErrorException e) {
 			e.printStackTrace();
 		}
 		
-		return listings;
-	}
-	
-	/**
-	 * Create table info from listings
-	 * @param List<Listing>
-	 */
-	private void populateUserListings(final List<Listing> listings) {
-		listings.forEach(p -> userListingData.add(new ListingInfo(p)));
-	}
-	
-	/**
-	 * Create table info from listings
-	 * @param List<Listing>
-	 */
-	private void populateListings(final List<Listing> listings) {
-		listings.forEach(p -> listingData.add(new ListingInfo(p)));
+		if (listings != null) {
+			listings.forEach(p -> userListingData.add(new ListingInfo(p)));
+		}
 	}
 }
 

@@ -288,7 +288,7 @@ public class ListingManager {
 	 * @throws DatabaseErrorException
 	 */
 	@SuppressWarnings("rawtypes")
-	public void setSold(long id) throws DatabaseErrorException {
+	public void setSold(long lId, long uId) throws DatabaseErrorException {
 		// Open session
 		Session session = sessionFactory.openSession();
 		Query q;
@@ -296,8 +296,16 @@ public class ListingManager {
 		// Talk to DB
 		try {
 			session.beginTransaction();
-			q = session.createSQLQuery("UPDATE listing SET (publishListing=0,isSold=1) WHERE listingId=:param1");
-			q.setParameter("param1", id);
+			
+			if (uId == -1) {
+				q = session.createQuery("UPDATE Listing SET publishListing=0,isSold=1 WHERE listingId=:param1");
+				q.setParameter("param1", lId);
+			} else {
+				q = session.createQuery("UPDATE Listing SET publishListing=0,isSold=1,soldToId=:param2 WHERE listingId=:param1");
+				q.setParameter("param1", lId);
+				q.setParameter("param2", uId);
+			}
+			
 			q.executeUpdate();
 			session.getTransaction().commit();
 		} catch (HibernateException e) {

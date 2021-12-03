@@ -14,6 +14,9 @@ Then place the JAR in C:\JARs
 Next, download the Javax Mailer JAR from https://github.com/javaee/javamail/releases/download/JAVAMAIL-1_6_2/javax.mail.jar
 Then place the JAR in C:\JARs
 
+Then, download the JavaBeans Activation Framework from https://search.maven.org/remotecontent?filepath=com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar
+Then place the JAR in C:\JARs
+
 After doing this, you should be able to compile like normal.
 
 # Backend Instructions

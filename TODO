@@ -2,15 +2,11 @@ Backend
  - Finish JUnit Tests
  - Move DB operations to tasks
  - Generate reports for current listings
- - Cache listings in ListingController
  - Admin View
    - Make admin screen
-     - Implement user search
-     - Add button for makeAdmin to table for each user
+     - Implement user search (https://stackoverflow.com/questions/47559491/making-a-search-bar-in-javafx)
  
-
 Frontend
  - Listing View
    - Add filtering functionality
-   - Add purchase button in TableView
-   - Remove purchase buttom from bottom
+   - Fix weird table size

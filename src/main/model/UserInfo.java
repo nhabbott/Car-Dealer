@@ -9,6 +9,7 @@ public class UserInfo {
 	private final SimpleStringProperty lastName;
 	private final SimpleStringProperty email;
 	private final SimpleStringProperty isAdmin;
+	private final  boolean admin;
 	
 	/**
 	 * 
@@ -22,9 +23,11 @@ public class UserInfo {
 		
 		// Convert bool to text
 		if (u.isAdmin()) {
-			this.isAdmin = new SimpleStringProperty("True");
+			this.admin = true;
+			this.isAdmin = new SimpleStringProperty("Administrator");
 		} else {
-			this.isAdmin = new SimpleStringProperty("False");
+			this.admin = false;
+			this.isAdmin = new SimpleStringProperty("User");
 		}
 	}
 
@@ -66,5 +69,13 @@ public class UserInfo {
 	 */
 	public String getIsAdmin() {
 		return isAdmin.get();
+	}
+	
+	/**
+	 * Gets whether or not the user is admin
+	 * @return boolean
+	 */
+	public boolean isAdmin() {
+		return admin;
 	}
 }

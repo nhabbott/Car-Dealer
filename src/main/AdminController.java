@@ -1,18 +1,15 @@
 package main;
 
-import main.model.ListingInfo;
 import main.model.PreviousSale;
 import main.model.Request;
 import main.model.UserInfo;
 import managers.ListingManager;
 import managers.UserManager;
 import objects.Listing;
-import objects.RequestButton;
 import objects.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -79,15 +76,17 @@ public class AdminController implements Initializable {
     @FXML
     private TableView<UserInfo> userListTable;
     @FXML
-    private TableColumn<User, String> usernameColumn;
+    private TableColumn<UserInfo, String> usernameColumn;
     @FXML
-    private TableColumn<User, String> firstNameColumn;
+    private TableColumn<UserInfo, String> firstNameColumn;
     @FXML
-    private TableColumn<User, String> lastNameColumn;
+    private TableColumn<UserInfo, String> lastNameColumn;
     @FXML
-    private TableColumn<User, String> emailColumn;
+    private TableColumn<UserInfo, String> emailColumn;
     @FXML
-    private TableColumn<User, String> isAdminColumn;
+    private TableColumn<UserInfo, String> isAdminColumn;
+    @FXML
+    private TableColumn<UserInfo, String> makeAdminColumn;
     @FXML
     private TextField usernameSearchBar;
     @FXML
@@ -129,12 +128,21 @@ public class AdminController implements Initializable {
     /**
      * Initializes the table with information from the database
      */
-    private void initTable() {
+    @SuppressWarnings("unchecked")
+	private void initTable() {
     	
     	// Setup request table
     	initColumnsR();
     	if (!cache.contains("requests")) { 
     		loadDataR();
+    	} else {
+    		List<Listing> listings = (List<Listing>) cache.get("requests");
+    		
+			listings.forEach((p) -> {
+				// Add request
+				Request r = new Request(p);			
+				requestData.add(r);
+			});
     	}
     	
     	acceptTableColumnR.setCellFactory(acceptBtnCellFactory);
@@ -145,6 +153,14 @@ public class AdminController implements Initializable {
     	initColumnsS();
     	if (!cache.contains("sold")) {
     		loadDataS();
+    	} else {
+    		List<Listing> listings = (List<Listing>) cache.get("sold");
+    		
+			listings.forEach((p) -> {
+				// Add request
+				PreviousSale r = new PreviousSale(p);			
+				soldData.add(r);
+			});
     	}
     	
     	sellsTableView.setItems(soldData);
@@ -153,8 +169,17 @@ public class AdminController implements Initializable {
     	initColumnsU();
     	if (!cache.contains("users")) {
     		loadDataU();
+    	} else {
+    		List<User> users = (List<User>) cache.get("users");
+    		
+			users.forEach((p) -> {
+				// Add request
+				UserInfo r = new UserInfo(p);			
+				userData.add(r);
+			});
     	}
     	
+    	makeAdminColumn.setCellFactory(makeAdminBtnCellFactory);
     	userListTable.setItems(userData);
     	
     	// Close ListingManager
@@ -203,6 +228,7 @@ public class AdminController implements Initializable {
         lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("isAdmin"));
+        makeAdminColumn.setCellValueFactory(new PropertyValueFactory<>(""));
     }
 
     /**
@@ -216,7 +242,7 @@ public class AdminController implements Initializable {
 
                 final Button btn = new Button("Accept");
 
-                @SuppressWarnings("unchecked")
+                @SuppressWarnings({ "unchecked" })
 				@Override
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
@@ -299,7 +325,7 @@ public class AdminController implements Initializable {
                 			// Un-publish listing
                 			try {
                 				lm.setPublished(listingId, false);
-                				lm.setSold(listingId);
+                				lm.setSold(listingId, -1);
                 			} catch (DatabaseErrorException e1) {
                 				e1.printStackTrace();
                 			}
@@ -334,7 +360,101 @@ public class AdminController implements Initializable {
 		}
     };
     
+    /**
+     * Callback for decline button
+     */
+    @SuppressWarnings("rawtypes")
+    Callback<TableColumn<UserInfo, String>, TableCell<UserInfo, String>> makeAdminBtnCellFactory = new Callback<TableColumn<UserInfo, String>, TableCell<UserInfo, String>>() {
+		@Override
+		public TableCell call(TableColumn<UserInfo, String> p) {
+			final TableCell<UserInfo, String> cell = new TableCell<UserInfo, String>() {
+				final Button btn = new Button();
+
+                @SuppressWarnings("unchecked")
+				@Override
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                    	UserInfo u = (UserInfo) getTableView().getItems().get(getIndex());
+                    	boolean admin;
+                    	
+            			// Check current permissions
+                        if (u.isAdmin()) {
+                        	btn.setText("Make Admin");
+                        	admin = true;
+                        } else {
+                        	btn.setText("Make User");
+                        	admin = false;
+                        }
+                    	
+                        btn.setOnAction(event -> {
+                			// Init ListingManager
+                			um.setup();
+                			
+                			// Un-publish listing
+                			try {
+                    			// Get needed info
+                				User uu = (User) um.getByEmail(u.getEmail());
+                				cache.add("tempUser", uu);
+                    			
+                				um.setAdmin(uu.getId(), admin);
+                			} catch (DatabaseErrorException e1) {
+                				e1.printStackTrace();
+                			}
+                			
+                			// Fix the cache
+                			if (cache.contains("users")) {
+                				List<User> l = (List<User>) cache.get("users");
+                				l.forEach(p -> {
+                					if (p.getId() == ((User) cache.get("tempUser")).getId()) {
+                						l.remove(p);
+                					}
+                				});
+                				
+                				cache.remove("tempUser");
+                				cache.remove("users");
+                				cache.add("users", l, TimeUnit.MINUTES.toMillis(30));
+                			}
+                			
+                			// Remove from table
+                			userListTable.getItems().remove(getIndex());
+                			
+                			// Update users table
+                			loadDataU();
+                			userListTable.setItems(userData);
+                			userListTable.refresh();
+                        });
+                        setGraphic(btn);
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+		}
+    };
+    
     public void refresh(ActionEvent e) {
+    	// Clear current data
+    	requestTableView.getItems().clear();
+    	requestTableView.refresh();
+    	
+    	// Clear cache
+    	if (cache.contains("requests")) {
+    		cache.remove("requests");
+    	}
+    	
+    	// Get new data
+    	lm.setup();
+    	loadDataR();
+    	lm.exit();
+    	
+    	// Refresh table
+    	acceptTableColumnR.setCellFactory(acceptBtnCellFactory);
+    	declineTableColumnR.setCellFactory(declineBtnCellFactory);
+    	requestTableView.setItems(requestData);
     	requestTableView.refresh();
     }
     
@@ -434,7 +554,11 @@ public class AdminController implements Initializable {
     	 List<User> users = null;
     	 
     	 try {
+    		 // Get all users
     		 users = um.getAll();
+    		 
+    		 // Cache all users to memory for 30 min
+    		 cache.add("users", users, TimeUnit.MINUTES.toMillis(30));
     	 } catch (DatabaseErrorException e) {
     		 e.printStackTrace();
     	 }

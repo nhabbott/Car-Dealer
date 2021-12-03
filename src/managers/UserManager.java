@@ -334,6 +334,30 @@ public class UserManager {
     	return true;
     }
     
+    @SuppressWarnings("rawtypes")
+	public void setAdmin(long id, boolean a) throws DatabaseErrorException {
+    	// Open session
+    	Session session = sessionFactory.openSession();
+    	Query q;
+    	
+    	// Set admin
+    	try {
+    		session.beginTransaction();
+    		
+    		q = session.createQuery("UPDATE User SET isAdmin=:param1 WHERE userId=:param2");
+    		q.setParameter("param1", (a ? 1: 0));
+    		q.setParameter("param2", id);
+    		q.executeUpdate();
+    		
+    		session.getTransaction().commit();
+    	} catch (HibernateException e) {
+    		session.getTransaction().rollback();
+    		throw new DatabaseErrorException("There was an error setting a user's admin permissions", e);
+    	} finally {
+    		session.close();
+    	}
+    }
+    
     /**
      * Get a user from the database by id
      * @param id
