@@ -17,6 +17,9 @@ Then place the JAR in C:\JARs
 Then, download the JavaBeans Activation Framework from https://search.maven.org/remotecontent?filepath=com/sun/activation/javax.activation/1.2.0/javax.activation-1.2.0.jar
 Then place the JAR in C:\JARs
 
+Next, download the JSON Simple JAR from https://repo1.maven.org/maven2/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar
+Then place the JAR in C:\JARs
+
 After doing this, you should be able to compile like normal.
 
 # Backend Instructions
