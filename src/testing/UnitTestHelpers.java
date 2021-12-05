@@ -49,7 +49,7 @@ protected SessionFactory sessionFactory;
     	Session session = sessionFactory.openSession();
     	
     	// Queries to be run
-    	String[] queries = {"DELETE FROM user WHERE firstName = UM", "ALTER TABLE user AUTO_INCREMENT = 1", "DELETE FROM wishlist", "ALTER TABLE wishlist AUTO_INCREMENT = 1"};
+    	String[] queries = {"DELETE FROM `user` WHERE `firstName` = 'UM'", "ALTER TABLE user AUTO_INCREMENT = 1", "DELETE FROM wishlist", "ALTER TABLE wishlist AUTO_INCREMENT = 1"};
     	
     	try {
     		session.beginTransaction();
@@ -75,7 +75,7 @@ protected SessionFactory sessionFactory;
     	Session session = sessionFactory.openSession();
     	
     	// Queries to run
-    	String[] queries = {"DELETE FROM listing WHERE price = 300000", "ALTER TABLE listing AUTO_INCREMENT = 1"};
+    	String[] queries = {"DELETE FROM `listing` WHERE `price` = 300000", "ALTER TABLE listing AUTO_INCREMENT = 1"};
     	
     	try {
     		session.beginTransaction();
