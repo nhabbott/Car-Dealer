@@ -65,7 +65,7 @@ public class MemoryCache implements Cache {
 			return;
 		}
 		
-		if (cache.contains(key)) {
+		if (cache.containsKey(key)) {
 			return;
 		}
 		
@@ -83,7 +83,7 @@ public class MemoryCache implements Cache {
 	 */
 	@Override
 	public void remove(String key) {
-		if (cache.contains(key)) { cache.remove(key); }
+		if (cache.containsKey(key)) { cache.remove(key); }
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class MemoryCache implements Cache {
 	 */
 	@Override
 	public boolean contains(String key) {
-		return cache.contains(key);
+		return cache.containsKey(key);
 	}
 
 	/**

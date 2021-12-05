@@ -9,6 +9,7 @@ import objects.Listing;
 import objects.User;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -90,8 +91,6 @@ public class AdminController implements Initializable {
     @FXML
     private TextField usernameSearchBar;
     @FXML
-    private TextField makeAdminTextField;
-    @FXML
     private Button makeAdminButton;
     @FXML
     private Button toListingsButton;
@@ -105,6 +104,7 @@ public class AdminController implements Initializable {
     private ObservableList<Request> requestData = FXCollections.observableArrayList();
     private ObservableList<PreviousSale> soldData = FXCollections.observableArrayList();
     private ObservableList<UserInfo> userData = FXCollections.observableArrayList();
+    private FilteredList<UserInfo> users;
 
     /**
      * 
@@ -180,7 +180,10 @@ public class AdminController implements Initializable {
     	}
     	
     	makeAdminColumn.setCellFactory(makeAdminBtnCellFactory);
-    	userListTable.setItems(userData);
+    	users = new FilteredList<UserInfo>(userData, u -> true);
+    	userListTable.setItems(users);
+    	
+    	initUserSearch();
     	
     	// Close ListingManager
     	lm.exit();
@@ -229,6 +232,16 @@ public class AdminController implements Initializable {
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
         isAdminColumn.setCellValueFactory(new PropertyValueFactory<>("isAdmin"));
         makeAdminColumn.setCellValueFactory(new PropertyValueFactory<>(""));
+    }
+    
+    private void initUserSearch() {
+    	usernameSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+    		if (newValue == null || newValue.isEmpty()) {
+    			return;
+    		} else {
+    			users.setPredicate(u -> u.getUsername().toLowerCase().contains(newValue));
+    		}
+    	});
     }
 
     /**
@@ -361,7 +374,7 @@ public class AdminController implements Initializable {
     };
     
     /**
-     * Callback for decline button
+     * Callback for make admin button
      */
     @SuppressWarnings("rawtypes")
     Callback<TableColumn<UserInfo, String>, TableCell<UserInfo, String>> makeAdminBtnCellFactory = new Callback<TableColumn<UserInfo, String>, TableCell<UserInfo, String>>() {
@@ -383,11 +396,11 @@ public class AdminController implements Initializable {
                     	
             			// Check current permissions
                         if (u.isAdmin()) {
-                        	btn.setText("Make Admin");
-                        	admin = true;
-                        } else {
                         	btn.setText("Make User");
                         	admin = false;
+                        } else {
+                        	btn.setText("Make Admin");
+                        	admin = true;
                         }
                     	
                         btn.setOnAction(event -> {
@@ -401,6 +414,7 @@ public class AdminController implements Initializable {
                 				cache.add("tempUser", uu);
                     			
                 				um.setAdmin(uu.getId(), admin);
+                				System.out.println("sdfkjhb dasfjhbkafdskhgjdsfghiyuldsgfhkl:     " + uu.getId());
                 			} catch (DatabaseErrorException e1) {
                 				e1.printStackTrace();
                 			}
@@ -419,12 +433,11 @@ public class AdminController implements Initializable {
                 				cache.add("users", l, TimeUnit.MINUTES.toMillis(30));
                 			}
                 			
-                			// Remove from table
-                			userListTable.getItems().remove(getIndex());
-                			
                 			// Update users table
+                			userData.clear();
                 			loadDataU();
-                			userListTable.setItems(userData);
+                			users = new FilteredList<UserInfo>(userData, var -> true);
+                			userListTable.setItems(users);
                 			userListTable.refresh();
                         });
                         setGraphic(btn);
@@ -457,15 +470,6 @@ public class AdminController implements Initializable {
     	requestTableView.setItems(requestData);
     	requestTableView.refresh();
     }
-    
-    
-    public void searchUsername(ActionEvent e) {
-    	
-    	String username = usernameSearchBar.getText();
-    	
-    	// Search user list for given username
-    }
-
 
     /**
 	 * Scene changer
@@ -476,14 +480,6 @@ public class AdminController implements Initializable {
 		lm.exit();
 		m.changeScene("listing.fxml");
 	}
-    
-    /**
-     * Action for makeAdminButton
-     * @param event - ActionEvent from button
-     */
-    public void makeAdminButtonOnAction(ActionEvent event) {
-        //make the username an admin
-    }
 
     /**
      * Event Handler for exitButton

@@ -226,7 +226,7 @@ public class ListingManager {
     	// Get from DB
     	try {
     		session.beginTransaction();
-    		q = session.createQuery("FROM Listing WHERE userId=:param1 AND isSold=0");
+    		q = session.createQuery("FROM Listing WHERE userId=:param1");
     		q.setParameter("param1", id);
     		listings = q.getResultList();
     		session.getTransaction().commit();

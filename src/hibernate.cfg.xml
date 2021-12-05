@@ -5,7 +5,7 @@
         <property name="connection.url">jdbc:mysql://207.148.7.63:3306/carsdb?useAffectedRows=true</property>  
         <property name="connection.username">cars</property>  
         <property name="connection.password">TheSUperSecurePassword123!</property>  
-        <property name="show_sql">true</property>
+        <property name="show_sql">false</property>
         <property name="use_legacy_limit_handlers">true</property>
 
         <mapping class="objects.Vehicle"/>

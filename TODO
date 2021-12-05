@@ -1,12 +1,4 @@
 Backend  
  - Finish JUnit Tests
  - Move DB operations to tasks
- - Generate reports for current listings
- - Admin View
-   - Make admin screen
-     - Implement user search (https://stackoverflow.com/questions/47559491/making-a-search-bar-in-javafx)
- 
-Frontend
- - Listing View
-   - Add filtering functionality
-   - Fix weird table size
+ - Generate reports for current listings (maybe)

@@ -23,7 +23,8 @@ DROP TABLE IF EXISTS `listing`;
 CREATE TABLE `listing` (
   `listingId` int NOT NULL AUTO_INCREMENT,
   `userId` int NOT NULL,
-  `wishlistId` int NOT NULL,
+  `soldToId` int DEFAULT '0',
+  `wishlistId` int DEFAULT NULL,
   `price` float NOT NULL,
   `datePosted` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `publishListing` tinyint(1) NOT NULL DEFAULT '0',
@@ -49,7 +50,7 @@ CREATE TABLE `user` (
   `resetToken` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Table structure for table `vehicle` */
 
@@ -80,7 +81,20 @@ DROP TABLE IF EXISTS `wishlist`;
 CREATE TABLE `wishlist` (
   `wishlistId` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`wishlistId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+/*!50106 set global event_scheduler = 1*/;
+
+/* Event structure for event `clearResetTokens` */
+
+/*!50106 DROP EVENT IF EXISTS `clearResetTokens`*/;
+
+DELIMITER $$
+
+/*!50106 CREATE DEFINER=`cars`@`%` EVENT `clearResetTokens` ON SCHEDULE EVERY 1 DAY STARTS '2021-12-04 01:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+	    UPDATE `user` SET `resetToken` = NULL WHERE `resetToken` IS NOT NULL;
+	END */$$
+DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

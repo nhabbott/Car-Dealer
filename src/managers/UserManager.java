@@ -345,7 +345,7 @@ public class UserManager {
     		session.beginTransaction();
     		
     		q = session.createQuery("UPDATE User SET isAdmin=:param1 WHERE userId=:param2");
-    		q.setParameter("param1", (a ? 1: 0));
+    		q.setParameter("param1", a);
     		q.setParameter("param2", id);
     		q.executeUpdate();
     		

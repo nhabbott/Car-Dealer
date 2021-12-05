@@ -24,7 +24,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import main.model.ListingInfo;
-import main.model.PreviousSale;
 import managers.ListingManager;
 import objects.Listing;
 import objects.User;
@@ -82,6 +81,8 @@ public class ListingController implements Initializable {
 	private TableColumn<ListingInfo, Integer> myMileageColumn; 
 	@FXML 
 	private TableColumn<ListingInfo, Integer> myPriceColumn;
+	@FXML
+	private TableColumn<ListingInfo, String> myStatusColumn;
 	
 	private ObservableList<ListingInfo> listingData = FXCollections.observableArrayList();
 	private ObservableList<ListingInfo> userListingData = FXCollections.observableArrayList();
@@ -142,9 +143,9 @@ public class ListingController implements Initializable {
 			// Update listing table
 			retrieveListingData();
 		} else {
-    		List<Listing> listings = (List<Listing>) cache.get("listings");
+    		List<Listing> l = (List<Listing>) cache.get("listings");
     		
-			listings.forEach((p) -> {
+			l.forEach((p) -> {
 				// Add request
 				ListingInfo r = new ListingInfo(p);			
 				listingData.add(r);
@@ -160,12 +161,12 @@ public class ListingController implements Initializable {
 			// Update user's listing table
 			retrieveUserListingData();
 		} else {
-    		List<Listing> listings = (List<Listing>) cache.get("userListings");
+    		List<Listing> lu = (List<Listing>) cache.get("userListings");
     		
-			listings.forEach((p) -> {
+    		lu.forEach((p) -> {
 				// Add request
 				ListingInfo r = new ListingInfo(p);			
-				listingData.add(r);
+				userListingData.add(r);
 			});
 		}
 		
@@ -195,6 +196,7 @@ public class ListingController implements Initializable {
         myYearColumn.setCellValueFactory(new PropertyValueFactory<>("year"));
         myMileageColumn.setCellValueFactory(new PropertyValueFactory<>("mileage"));
         myPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        myStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
     
     /**
@@ -285,20 +287,20 @@ public class ListingController implements Initializable {
 	 */
 	private void retrieveUserListingData() {
 		// Return var
-		List<Listing> listings = null;
+		List<Listing> lu = null;
 		
 		try {
 			// Get a user's listings
-			listings = lm.getUsersListings(u.getId());
+			lu = lm.getUsersListings(u.getId());
 			
 			// Cache all user's listings
-			cache.add("userListings", listings, TimeUnit.MINUTES.toMillis(30));
+			cache.add("userListings", lu, TimeUnit.MINUTES.toMillis(30));
 		} catch (DatabaseErrorException e) {
 			e.printStackTrace();
 		}
 		
-		if (listings != null) {
-			listings.forEach(p -> userListingData.add(new ListingInfo(p)));
+		if (lu != null) {
+			lu.forEach(p -> userListingData.add(new ListingInfo(p)));
 		}
 	}
 }

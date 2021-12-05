@@ -111,29 +111,10 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <TextField fx:id="usernameSearchBar" layoutX="5.0" layoutY="7.0" onAction="#searchUsername" prefHeight="25.0" prefWidth="286.0" promptText="Search Username" />
+                              <TextField fx:id="usernameSearchBar" layoutX="5.0" layoutY="7.0" prefHeight="25.0" prefWidth="286.0" promptText="Search Username" />
                            </children>
                         </AnchorPane>
                      </content>
-                  </Tab>
-                  <Tab text="Create Admin">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="409.0" prefWidth="800.0">
-                           <children>
-                              <TextField fx:id="makeAdminTextField" layoutX="332.0" layoutY="212.0" promptText="User to be Admin" />
-                              <Label layoutX="256.0" layoutY="215.0" text="Username">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Label>
-                              <Button fx:id="makeAdminButton" layoutX="358.0" layoutY="261.0" mnemonicParsing="false" onAction="#makeAdminButtonOnAction" style="-fx-background-color: #8900f7;" text="Make Admin" textFill="WHITE">
-                                 <font>
-                                    <Font size="14.0" />
-                                 </font>
-                              </Button>
-                           </children>
-                        </AnchorPane>
-                    </content>
                   </Tab>
               </tabs>
             </TabPane>

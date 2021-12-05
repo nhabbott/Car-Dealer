@@ -14,6 +14,7 @@ public class ListingInfo {
 	private final SimpleIntegerProperty year;
 	private final SimpleIntegerProperty mileage;
 	private final SimpleFloatProperty price;
+	private final SimpleStringProperty status;
 	private final long id;
 	
 	/**
@@ -30,6 +31,17 @@ public class ListingInfo {
 		this.year = new SimpleIntegerProperty(v.getYear());
 		this.mileage = new SimpleIntegerProperty(v.getMileage());
 		this.price = new SimpleFloatProperty(l.getPrice());
+		
+		if (l.getSoldToId() == 0 && l.isPublished()) {
+			this.status = new SimpleStringProperty("Listed");
+		} else if (l.getSoldToId() != 0) {
+			this.status = new SimpleStringProperty("Sold");
+		} else if (!l.isPublished()) {
+			this.status = new SimpleStringProperty("Pending Approval");
+		} else {
+			this.status = new SimpleStringProperty("Denied");
+		}
+		
 		this.id = l.getId();
 	}
 	
@@ -87,6 +99,14 @@ public class ListingInfo {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+	/**
+	 * Gets the status of the listing
+	 * @return String
+	 */
+	public String getStatus() {
+		return status.get();
 	}
 }
 
