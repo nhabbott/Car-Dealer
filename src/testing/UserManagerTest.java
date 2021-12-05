@@ -2,6 +2,8 @@ package testing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import exceptions.DatabaseErrorException;
 import managers.UserManager;
+import objects.User;
 
 class UserManagerTest {
 
@@ -107,8 +110,152 @@ class UserManagerTest {
 	}
 
 	@Test
-	@DisplayName("User information can be updated in the database")
-	void testUpdate() {
-		fail("Not yet implemented");
+	@DisplayName("All users can be gotten from database")
+	void testGetAll() {
+		List<User> users = null;
+		
+		try {
+			// Get all users
+			users = um.getAll();
+			
+			// Make sure all users were obtained
+			assertTrue(users != null, "Users were not obtained successfully");
+			
+		} catch (DatabaseErrorException e) {
+			e.printStackTrace();
+			fail("An error occurred when obtaining users: " + e);
+		}
+	}
+	
+	@Test
+	@DisplayName("User can be be identified by username")
+	void testGetByUsername() {
+		long id = -1;
+		User u = null;
+		try {
+			// Create new user
+			id = um.create("Test", "Testerson", false, "ttesterson1", "Test1234!", "test3@test.com");
+			
+			// Make sure new user was created
+			if (id == -1)
+				fail("User was not created");
+			
+			u = um.getByUsername("ttesterson1");
+			
+			// Make sure user was identified
+			assertEquals(id, u.getId(), "User was not identified successfully");
+			
+		} catch (DatabaseErrorException e) {
+			fail("An error occurred when identifying a user: " + e);
+		}
+	}
+	
+	@Test
+	@DisplayName("User can be be identified by email")
+	void testGetByEmail() {
+		long id = -1;
+		User u = null;
+		try {
+			// Create new user
+			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test4@test.com");
+			
+			// Make sure new user was created
+			if (id == -1)
+				fail("User was not created");
+			
+			u = um.getByEmail("test4@test.com");
+			
+			// Make sure user was identified
+			assertEquals(id, u.getId(), "User was not identified successfully");
+			
+		} catch (DatabaseErrorException e) {
+			fail("An error occurred when identifying a user: " + e);
+		}
+	}
+	
+	@Test
+	@DisplayName("User can be be upgraded to admin")
+	void testSetAdmin() {
+		long id = -1;
+		User u = null;
+		try {
+			// Create new user
+			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test5@test.com");
+			
+			// Make sure new user was created
+			if (id == -1)
+				fail("User was not created");
+			
+			
+			// Make sure becomes admin
+			u = um.getByEmail("test4@test.com");
+			um.setAdmin(u.getId(), true);
+			
+		} catch (DatabaseErrorException e) {
+			fail("An error occurred when making user an admin: " + e);
+		}
+	}
+	
+	@Test
+	@DisplayName("User can enter their email to get a reset token")
+	void testforgotPasswordEmail() {
+		long id = -1;
+		try {
+			// Create new user
+			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test6@test.com");
+			
+			// Make sure new user was created
+			if (id == -1)
+				fail("User was not created");
+			
+			
+			// Make sure email is generated
+			assertTrue(um.forgotPassowrdEmail("test6@test.com"), "Email was not generated successfully");
+			
+		} catch (DatabaseErrorException e) {
+			fail("An error occurred when generating the email: " + e);
+		}
+	}
+	/*
+	@Test
+	@DisplayName("User can enter a password reset token")
+	void testCheckResetToken() {
+		long id = -1;
+		try {
+			// Create new user
+			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test7@test.com");
+			
+			// Make sure new user was created
+			if (id == -1)
+				fail("User was not created");
+			
+			
+			// Make sure users password is updated
+			assertTrue(um.checkResetToken("1234sade"), "Token was not checked successfully");
+			
+		} catch (DatabaseErrorException e) {
+			fail("An error occurred when checking a token: " + e);
+		}
+	}
+	*/
+	@Test
+	@DisplayName("User can reset their password")
+	void testResetPassword() {
+		long id = -1;
+		try {
+			// Create new user
+			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test8@test.com");
+			
+			// Make sure new user was created
+			if (id == -1)
+				fail("User was not created");
+			
+			
+			// Make sure users password is updated
+			assertTrue(um.resetPassword("1234sade", "newPassword"), "Password was not updated successfully");
+			
+		} catch (DatabaseErrorException e) {
+			fail("An error occurred when resetting a password: " + e);
+		}
 	}
 }

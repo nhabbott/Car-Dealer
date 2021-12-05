@@ -101,7 +101,7 @@ protected SessionFactory sessionFactory;
     	Session session = sessionFactory.openSession();
     	
     	// Queries to run
-    	String[] queries = {};
+    	String[] queries = {"DELETE FROM listing", "ALTER TABLE listing AUTO_INCREMENT = 1"};
     	
     	try {
     		session.beginTransaction();
