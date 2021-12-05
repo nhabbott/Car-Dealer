@@ -73,9 +73,9 @@
                 </Tab>
                 <Tab text="Previous Sells">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="451.0" prefWidth="600.0">
                            <children>
-                              <TableView fx:id="sellsTableView" editable="true" prefHeight="503.0" prefWidth="800.0" style="-fx-background-color: grey;">
+                              <TableView fx:id="sellsTableView" editable="true" layoutY="39.0" prefHeight="463.0" prefWidth="800.0" style="-fx-background-color: grey;">
                                  <columns>
                                     <TableColumn fx:id="nameTableColumnS" prefWidth="111.0" text="Listed By" />
                                     <TableColumn fx:id="soldToTableColumnS" prefWidth="111.0" text="Sold To" />
@@ -90,6 +90,11 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
+                              <Button fx:id="refreshButton" layoutY="-2.0" mnemonicParsing="false" onAction="#refreshSells" prefHeight="42.0" prefWidth="800.0" style="-fx-background-color: indigo;" text="Refresh Requests" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Button>
                            </children>
                         </AnchorPane>
                   </content>

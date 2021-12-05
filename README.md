@@ -27,3 +27,5 @@ This project requires the use of a MySQL Server. It must have the following:
 1. A database named carsdb.
 2. A user named cars with a password of TheSUperSecurePassword123! and it must have all permissions granted for the carsdb database.
 3. The carsdb databse must be initialized with the initDB.sql file that can be found in the root of this project's directory.
+4. After running initDB.sql, you must run dbInfo.sql to insert sample information into the DB.
+5. To login to the program, you can using the following: Username - test & Password - Test1234!

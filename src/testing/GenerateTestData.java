@@ -79,7 +79,7 @@ class GenerateTestData {
 	}
 	
 	@Test
-	@DisplayName("Generate Test Data")
+	@DisplayName("DO NOT RUN")
 	void genTest() throws IOException, ParseException {
 		lm = new ListingManager();
 		lm.setup();
@@ -89,7 +89,7 @@ class GenerateTestData {
 		JSONArray a = (JSONArray) obj.get("Vehicle List");
 		long[] ids = createUsers();
 		
-		for (int i = 0; i < a.size(); i++) {
+		for (int i = 0; i < 100; i++) {
 			JSONObject o = (JSONObject) a.get(i);
 			Vehicle v = new Vehicle(genVIN(), vehicleType.valueOf(((String) o.get("Type")).toLowerCase()), vehicleSize.valueOf(((String) o.get("Size")).toLowerCase()), (Integer.parseInt((String) o.get("Year"))), ((String) o.get("Make")), ((String) o.get("Model")), numOfCylinders.valueOf(((String) o.get("Cylinders")).toLowerCase()), vehicleTrans.valueOf(((String) o.get("Transmission")).toLowerCase()), fuelType.valueOf(((String) o.get("Fuel")).toLowerCase()), ((String) o.get("Country")), (Integer.parseInt((String) o.get("Mileage"))));
 			

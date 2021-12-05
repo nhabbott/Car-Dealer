@@ -49,33 +49,7 @@ protected SessionFactory sessionFactory;
     	Session session = sessionFactory.openSession();
     	
     	// Queries to be run
-    	String[] queries = {"DELETE FROM user", "ALTER TABLE user AUTO_INCREMENT = 1", "DELETE FROM wishlist", "ALTER TABLE wishlist AUTO_INCREMENT = 1"};
-    	
-    	try {
-    		session.beginTransaction();
-    		
-    		for (String s: queries) {
-    			Query q = session.createSQLQuery(s);
-    			q.executeUpdate();
-    			q = null;
-    		}
-    		
-    		session.getTransaction().commit();
-    	} catch (HibernateException e) {
-    		session.getTransaction().rollback();
-    		throw new DatabaseErrorException("There was en error running a query", e);
-    	} finally {
-    		session.close();
-    	}
-    }
-    
-    @SuppressWarnings("rawtypes")
-	public void cleanUpVehicleTests() throws DatabaseErrorException {
-    	// Open session
-    	Session session = sessionFactory.openSession();
-    	
-    	// Queries to run
-    	String[] queries = {"DELETE FROM vehicle", "ALTER TABLE vehicle AUTO_INCREMENT = 1"};
+    	String[] queries = {"DELETE FROM user WHERE firstName = UM", "ALTER TABLE user AUTO_INCREMENT = 1", "DELETE FROM wishlist", "ALTER TABLE wishlist AUTO_INCREMENT = 1"};
     	
     	try {
     		session.beginTransaction();
@@ -101,7 +75,7 @@ protected SessionFactory sessionFactory;
     	Session session = sessionFactory.openSession();
     	
     	// Queries to run
-    	String[] queries = {"DELETE FROM listing", "ALTER TABLE listing AUTO_INCREMENT = 1"};
+    	String[] queries = {"DELETE FROM listing WHERE price = 300000", "ALTER TABLE listing AUTO_INCREMENT = 1"};
     	
     	try {
     		session.beginTransaction();

@@ -59,7 +59,7 @@ class UserManagerTest {
 		
 		try {
 			// Create user in the DB
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test@test.com");
+			id = um.create("UM", "Unit Test", false, "unittestuser1", "Test1234!", "junit@test.com");
 			
 			// Check if new user id was returned
 			assertNotEquals(-1, id, "User was not created successfully");
@@ -75,7 +75,7 @@ class UserManagerTest {
 		
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test1@test.com");
+			id = um.create("UM", "Testerson", false, "unittestuser2", "Test1234", "test1@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)
@@ -96,7 +96,7 @@ class UserManagerTest {
 		
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test2@test.com");
+			id = um.create("UM", "Testerson", false, "unittestuser3", "Test123!", "test2@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)
@@ -134,7 +134,7 @@ class UserManagerTest {
 		User u = null;
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson1", "Test1234!", "test3@test.com");
+			id = um.create("UM", "Testerson", false, "ttesterson1", "Test1234!", "test3@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)
@@ -157,7 +157,7 @@ class UserManagerTest {
 		User u = null;
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test4@test.com");
+			id = um.create("UM", "Testerson", false, "ttesterson2", "Test1234!", "test4@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)
@@ -180,7 +180,7 @@ class UserManagerTest {
 		User u = null;
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test5@test.com");
+			id = um.create("UM", "Testerson", false, "ttesterson3", "Test1234!", "test5@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)
@@ -202,7 +202,7 @@ class UserManagerTest {
 		long id = -1;
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test6@test.com");
+			id = um.create("UM", "Testerson", false, "ttesterson4", "Test1234!", "test6@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)
@@ -216,35 +216,14 @@ class UserManagerTest {
 			fail("An error occurred when generating the email: " + e);
 		}
 	}
-	/*
-	@Test
-	@DisplayName("User can enter a password reset token")
-	void testCheckResetToken() {
-		long id = -1;
-		try {
-			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test7@test.com");
-			
-			// Make sure new user was created
-			if (id == -1)
-				fail("User was not created");
-			
-			
-			// Make sure users password is updated
-			assertTrue(um.checkResetToken("1234sade"), "Token was not checked successfully");
-			
-		} catch (DatabaseErrorException e) {
-			fail("An error occurred when checking a token: " + e);
-		}
-	}
-	*/
+
 	@Test
 	@DisplayName("User can reset their password")
 	void testResetPassword() {
 		long id = -1;
 		try {
 			// Create new user
-			id = um.create("Test", "Testerson", false, "ttesterson", "Test1234!", "test8@test.com");
+			id = um.create("UM", "Testerson", false, "ttesterson5", "Test1234!", "test8@test.com");
 			
 			// Make sure new user was created
 			if (id == -1)

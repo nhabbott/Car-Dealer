@@ -478,6 +478,26 @@ public class AdminController implements Initializable {
     	requestTableView.setItems(requestData);
     	requestTableView.refresh();
     }
+    
+    public void refreshSells(ActionEvent e) {
+    	// Clear current data
+    	sellsTableView.getItems().clear();
+    	sellsTableView.refresh();
+    	
+    	// Clear cache
+    	if (cache.contains("sold")) {
+    		cache.remove("sold");
+    	}
+    	
+    	// Get new data
+    	lm.setup();
+    	loadDataS();
+    	lm.exit();
+    	
+    	// Refresh table
+    	sellsTableView.setItems(soldData);
+    	sellsTableView.refresh();
+    }
 
     /**
 	 * Scene changer
