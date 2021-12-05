@@ -2,6 +2,7 @@ package main;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
@@ -236,11 +237,15 @@ public class ListingController implements Initializable {
                 			// Fix the cache
                 			if (cache.contains("listings")) {
                 				List<Listing> l = (List<Listing>) cache.get("listings");
-                				l.forEach(p -> {
-                					if (p.getId() == listingId) {
-                						l.remove(p);
+                				Iterator<Listing> i = l.iterator();
+                				
+                				while (i.hasNext()) {
+                					Listing li = i.next();
+                					
+                					if (li.getId() == listingId) {
+                						i.remove();
                 					}
-                				});
+                				}
                 				
                 				cache.remove("listings");
                 				cache.add("listings", l, TimeUnit.MINUTES.toMillis(30));

@@ -8,6 +8,8 @@ import managers.UserManager;
 import objects.Listing;
 import objects.User;
 
+import static cache.Caching.cache;
+
 public class Request {
 	private UserManager um = new UserManager();
 	
@@ -29,14 +31,20 @@ public class Request {
 	public Request(Listing l) {
 		// Get user info
 		User u = null;
-		um.setup();
 		
-		try {
-			u = (User) um.get(l.getUserId());
-		} catch (DatabaseErrorException e) {
-			e.printStackTrace();
-		} finally {
-			um.exit();
+		if (cache.contains(String.valueOf(l.getUserId()))) {
+			u = (User) cache.get(String.valueOf(l.getUserId()));
+		} else {
+			um.setup();
+			
+			try {
+				u = (User) um.get(l.getUserId());
+				cache.add(String.valueOf(l.getUserId()), u);
+			} catch (DatabaseErrorException e) {
+				e.printStackTrace();
+			} finally {
+				um.exit();
+			}
 		}
 		
 		this.id = l.getId();

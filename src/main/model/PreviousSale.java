@@ -1,5 +1,7 @@
 package main.model;
 
+import static cache.Caching.cache;
+
 import exceptions.DatabaseErrorException;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -32,13 +34,22 @@ public class PreviousSale {
 		User s = null;
 		um.setup();
 		
-		try {
-			u = (User) um.get(l.getUserId());
-			s = (User) um.get(l.getSoldToId());
-		} catch (DatabaseErrorException e) {
-			e.printStackTrace();
-		} finally {
-			um.exit();
+		if (cache.contains(String.valueOf(l.getUserId())) && cache.contains(String.valueOf(l.getSoldToId()))) {
+			u = (User) cache.get(String.valueOf(l.getUserId()));
+			s = (User) cache.get(String.valueOf(l.getSoldToId()));
+		} else {
+			um.setup();
+			
+			try {
+				u = (User) um.get(l.getUserId());
+				cache.add(String.valueOf(l.getUserId()), u);
+				s = (User) um.get(l.getSoldToId());
+				cache.add(String.valueOf(l.getSoldToId()), s);
+			} catch (DatabaseErrorException e) {
+				e.printStackTrace();
+			} finally {
+				um.exit();
+			}
 		}
 		
 		this.id = l.getId();

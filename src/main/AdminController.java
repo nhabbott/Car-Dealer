@@ -236,11 +236,20 @@ public class AdminController implements Initializable {
     
     private void initUserSearch() {
     	usernameSearchBar.textProperty().addListener((observable, oldValue, newValue) -> {
-    		if (newValue == null || newValue.isEmpty()) {
-    			return;
-    		} else {
-    			users.setPredicate(u -> u.getUsername().toLowerCase().contains(newValue));
-    		}
+    		users.setPredicate(u -> {
+    			if (newValue == null || newValue.isEmpty()) {
+    				return true;
+    			}
+    			
+    			String name = u.getUsername();
+    			String f = newValue.toLowerCase();
+    			
+    			if (name.toLowerCase().contains(f)) {
+    				return true;
+    			} else {
+    				return false;
+    			}
+    		});
     	});
     }
 
@@ -414,7 +423,6 @@ public class AdminController implements Initializable {
                 				cache.add("tempUser", uu);
                     			
                 				um.setAdmin(uu.getId(), admin);
-                				System.out.println("sdfkjhb dasfjhbkafdskhgjdsfghiyuldsgfhkl:     " + uu.getId());
                 			} catch (DatabaseErrorException e1) {
                 				e1.printStackTrace();
                 			}
